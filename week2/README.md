@@ -16,8 +16,8 @@ Week 2에서는 파이썬의 `Streamlit` 라이브러리를 사용해 웹 대시
 - **[week2.py](week2.py)**: Streamlit에서 제공하는 다양한 컴포넌트(텍스트, 버튼, 체크박스, 선택박스, 다이얼로그, 메트릭, 데이터프레임, 미디어 재생 등)의 사용법을 익혔습니다.
 
 ### 3. SQL 데이터 분석 실습
-- **[camping.sql](camping.sql)**: 전국 캠핑장 정보 데이터를 활용하여 데이터 추출(SELECT), 조건 필터링(WHERE), 패턴 매칭(LIKE), 그룹화(GROUP BY), 정렬(ORDER BY) 등 기본적인 SQL 쿼리문을 실습했습니다.
-
+- **[camping.sql](./sql/camping.sql)**: 전국 캠핑장 정보 데이터를 활용하여 데이터 추출(SELECT), 조건 필터링(WHERE), 패턴 매칭(LIKE), 그룹화(GROUP BY), 정렬(ORDER BY) 등 기본적인 SQL 쿼리문을 실습했습니다.
+- **[sql_practice.ipynb](./sql/sql_practice.ipynb)**: 오라클에서 제공하는 샘플 커머스 데이터를 기반으로 시각화 실습을 진행했습니다.
 ---
 
 ## 💻 실행 방법 (Streamlit)
