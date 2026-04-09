@@ -1,0 +1,14 @@
+[project]
+name = "ai-camp-note"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "jpype1>=1.6.0",
+    "jupyter>=1.1.1",
+    "konlpy>=0.6.0",
+    "lyricsgenius>=3.11.0",
+    "streamlit>=1.56.0",
+    "wordcloud>=1.9.6",
+]
