@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "ai-camp-note"
 version = "0.1.0"
@@ -14,4 +18,12 @@ dependencies = [
     "seaborn>=0.13.2",
     "streamlit>=1.56.0",
     "wordcloud>=1.9.6",
+    "pydantic>=2.0.0",
+    "pandera[pandas]>=0.13.0",
+    "xmltodict>=0.13.0",
+    "folium>=0.20.0",
 ]
+
+[tool.setuptools]
+packages = ["week1", "week2", "week3"]
+py-modules = ["config"]
