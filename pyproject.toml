@@ -31,6 +31,10 @@ dependencies = [
     # week4
     "numpy>=2.4.4",
     "matplotlib>=3.10.8",
+    "plotly>=6.7.0",
+    "notebook>=7.5.5",
+    "nbformat>=5.10.4",
+    "statsmodels>=0.14.6",
 ]
 
 [tool.setuptools]

@@ -25,6 +25,14 @@
 - **데이터 병합(Merge & Concat)**: 단순 이어붙이기인 `concat`과 관계형 조인인 `merge`의 차이점 및 다중 테이블 병합(`on`, `how` 옵션) 실습.
 - **결측치 고도화 처리**: `fillna`, `ffill`, `interpolate` 등 상황별 결측치 보간 전략 수립 및 `eval()`을 이용한 효율적인 파상변수 생성.
 
+### 🔵 Theme 4: 데이터 요약 및 다차원 집계 분석 (2026-04-21)
+데이터를 그룹화하고 다양한 관점에서 통계량을 산출하며, 시선을 사로잡는 시각화 기법을 학습했습니다.
+- **Grouping & Aggregation**: `groupby` 연산의 'Split-Apply-Combine' 메커니즘과 `unstack()`을 활용한 구조 변경.
+- **Pivot Table & Crosstab**: 엑셀의 피벗 기능을 넘어서는 다차원 데이터 재구조화 및 리포트 생성 실습.
+- **Advanced Visualization**: Seaborn을 활용한 통계적 시각화(Heatmap, Boxplot, Regplot, Jointplot 등) 및 인터랙티브 도구(Plotly) 이해.
+- **Performance Optimization**: `apply(lambda)` 지양 및 `np.where`, `np.select`를 활용한 벡터화 연산 최적화 전략.
+- **Configuration Strategy**: 하드코딩을 배제한 전역 상수(Date Format 등) 관리 및 '선-계획 후-실행'의 분석가 마인드셋 수립.
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
@@ -32,9 +40,11 @@
 ### 📓 실습 노트북 및 리포트
 - [04-17.ipynb](04-17.ipynb): NumPy 배열 조작, 이미지 필터링, Pandas 기초 실습.
 - [04-20.ipynb](04-20.ipynb): 데이터 전처리(Dummy, Binning), 결측치 처리, 데이터프레임 병합 및 고급 연산 실습.
+- [04-21.ipynb](04-21.ipynb): 4/21 실습용 노트북.
 - **트러블슈팅 리포트**:
     - [2026-04-17 리포트](./troubleshooting/2026-04-17.md): 이미지 오버플로우, 넘파이 뷰(View) 개념.
     - [2026-04-20 리포트](./troubleshooting/2026-04-20.md): 다중공선성, 포트 폭주, 판다스 자동 형변환.
+    - [2026-04-21 리포트](./troubleshooting/2026-04-21.md): 4/21 실습 리포트 (진행 중).
 
 ---
 
