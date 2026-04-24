@@ -35,8 +35,10 @@ dependencies = [
     "notebook>=7.5.5",
     "nbformat>=5.10.4",
     "statsmodels>=0.14.6",
+    # week5
+    "scikit-learn>=1.8.0",
 ]
 
 [tool.setuptools]
-packages = ["week1", "week2", "week3"]
+packages = ["week1", "week2", "week3", "week4", "week5"]
 py-modules = ["config"]
