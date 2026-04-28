@@ -26,6 +26,13 @@
     - **Decision Tree**: 스무고개 기반 규칙 생성 및 `max_depth`를 통한 과적합 제어.
 - **성능 평가**: 혼동 행렬(Confusion Matrix) 기반의 Accuracy, Precision, Recall, F1-Score 이해.
 
+### 🟠 Theme 10: 분류 모델 심화 및 성능 최적화 (2026-04-28)
+다양한 분류 알고리즘(KNN, Decision Tree, SVM)의 하이퍼파라미터 튜닝과 불균형 데이터 대응 전략을 실습했습니다.
+- **하이퍼파라미터 튜닝**: KNN의 최적 K값 탐색 및 결정 트리의 `max_depth` 시각화 분석.
+- **SVM (Support Vector Machine)**: 마진 최대화 원리 및 커널 트릭(RBF, Linear)의 이해.
+- **불균형 데이터 대응**: 정확도의 함정(Accuracy Paradox) 이해 및 임계값(Threshold) 조정을 통한 재현율(Recall) 최적화.
+- **모델 시각화**: `plot_tree`를 활용한 의사결정 로직 해석 및 SVR의 엡실론 튜브 시각화.
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
@@ -33,13 +40,15 @@
 ### 📓 실습 노트북 및 리포트
 - [04-24.ipynb](04-24.ipynb): 머신러닝 데이터 전처리 및 회귀 기초 실습.
 - [04-27.ipynb](04-27.ipynb): 단순/다중 회귀 및 분류(KNN, Decision Tree) 모델링 실습.
+- [04-28.ipynb](04-28.ipynb): 분류 모델 심화(SVM 포함) 및 임계값 조정, 시각화 실습.
 - **트러블슈팅 리포트**:
     - [2026-04-24 리포트](./troubleshooting/2026-04-24.md): 데이터 누수 및 스케일링 이슈 대응.
     - [2026-04-27 리포트](./troubleshooting/2026-04-27.md): 인덱스 불일치, 다중공선성, 모델별 시각화 한계점 대응.
+    - [2026-04-28 리포트](./troubleshooting/2026-04-28.md): 평가 지표 길이 불일치, 시각화 타입 에러 및 불균형 데이터 튜닝 리포트.
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Machine Learning**: `Scikit-Learn` (`LinearRegression`, `KNeighborsClassifier`, `DecisionTreeClassifier`)
+- **Machine Learning**: `Scikit-Learn` (`LinearRegression`, `KNeighborsClassifier`, `DecisionTreeClassifier`, `SVC`, `SVR`)
 - **Data Analysis**: `Pandas`, `NumPy`
 - **Visualization**: `Matplotlib`, `Seaborn`, `plot_tree`
