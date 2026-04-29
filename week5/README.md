@@ -32,6 +32,14 @@
 - **SVM (Support Vector Machine)**: 마진 최대화 원리 및 커널 트릭(RBF, Linear)의 이해.
 - **불균형 데이터 대응**: 정확도의 함정(Accuracy Paradox) 이해 및 임계값(Threshold) 조정을 통한 재현율(Recall) 최적화.
 - **모델 시각화**: `plot_tree`를 활용한 의사결정 로직 해석 및 SVR의 엡실론 튜브 시각화.
+### 🔵 Theme 11: 교차 검증 및 로지스틱 회귀 (2026-04-29) [COMPLETED]
+모델의 일반화 성능을 극대화하기 위한 검증 전략과 확률 기반 분류 모델인 로지스틱 회귀를 학습했습니다.
+- **교차 검증 (Cross Validation)**: `K-Fold`의 원리와 데이터 낭비 없는 성능 평가 기법. 데이터 규모에 따른 표준편차(안정성) 해석.
+- **로지스틱 회귀 (Logistic Regression)**: 시그모이드 함수를 활용한 확률 도출 및 선형 회귀와의 차이점 이해.
+- **하이퍼파라미터 최적화**: `GridSearchCV`와 `RandomizedSearchCV`의 차이점 및 하이브리드 튜닝 전략.
+- **심화 지표**: `ROC Curve`와 `AUC`를 활용한 불균형 데이터 구별 능력 평가.
+- **SVR 실습**: 회귀용 SVM인 `SVR` 적용 및 거리 기반 모델에서 스케일링의 결정적 역할 확인.
+
 
 ---
 
@@ -41,14 +49,16 @@
 - [04-24.ipynb](04-24.ipynb): 머신러닝 데이터 전처리 및 회귀 기초 실습.
 - [04-27.ipynb](04-27.ipynb): 단순/다중 회귀 및 분류(KNN, Decision Tree) 모델링 실습.
 - [04-28.ipynb](04-28.ipynb): 분류 모델 심화(SVM 포함) 및 임계값 조정, 시각화 실습.
+- [04-29.ipynb](04-29.ipynb): 교차 검증(K-Fold) 및 로지스틱 회귀 모델링 실습.
 - **트러블슈팅 리포트**:
     - [2026-04-24 리포트](./troubleshooting/2026-04-24.md): 데이터 누수 및 스케일링 이슈 대응.
     - [2026-04-27 리포트](./troubleshooting/2026-04-27.md): 인덱스 불일치, 다중공선성, 모델별 시각화 한계점 대응.
     - [2026-04-28 리포트](./troubleshooting/2026-04-28.md): 평가 지표 길이 불일치, 시각화 타입 에러 및 불균형 데이터 튜닝 리포트.
+    - [2026-04-29 리포트](./troubleshooting/2026-04-29.md): 교차 검증 시 데이터 분할 이슈 및 로지스틱 회귀 해석 리포트.
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Machine Learning**: `Scikit-Learn` (`LinearRegression`, `KNeighborsClassifier`, `DecisionTreeClassifier`, `SVC`, `SVR`)
+- **Machine Learning**: `Scikit-Learn` (`LinearRegression`, `KNeighborsClassifier`, `DecisionTreeClassifier`, `SVC`, `SVR`, `LogisticRegression`, `KFold`, `cross_val_score`)
 - **Data Analysis**: `Pandas`, `NumPy`
 - **Visualization**: `Matplotlib`, `Seaborn`, `plot_tree`
