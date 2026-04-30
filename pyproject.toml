@@ -37,6 +37,10 @@ dependencies = [
     "statsmodels>=0.14.6",
     # week5
     "scikit-learn>=1.8.0",
+    "xgboost>=3.2.0",
+    "lightgbm>=4.6.0",
+    "imbalanced-learn>=0.14.1",
+    "optuna>=4.8.0",
 ]
 
 [tool.setuptools]
