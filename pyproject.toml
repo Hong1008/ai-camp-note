@@ -41,6 +41,7 @@ dependencies = [
     "lightgbm>=4.6.0",
     "imbalanced-learn>=0.14.1",
     "optuna>=4.8.0",
+    "joblib>=1.5.3",
 ]
 
 [tool.setuptools]
