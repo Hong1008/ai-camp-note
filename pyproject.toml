@@ -44,8 +44,11 @@ dependencies = [
     "joblib>=1.5.3",
     "xlrd>=2.0.2",
     "yellowbrick>=1.5",
+    # week6
+    "openpyxl>=3.1.5",
+    "torch>=2.11.0",
 ]
 
 [tool.setuptools]
-packages = ["week1", "week2", "week3", "week4", "week5"]
+packages = ["week1", "week2", "week3", "week4", "week5", "week6"]
 py-modules = ["config"]
