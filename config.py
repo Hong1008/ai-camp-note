@@ -5,6 +5,7 @@ from pathlib import Path
 # 프로젝트 루트 경로 설정 (.env 파일을 찾기 위함)
 BASE_DIR = Path(__file__).resolve().parent
 env_path = BASE_DIR / '.env'
+CONTENT_DIR = BASE_DIR / 'content'
 
 # .env 파일 로드
 load_dotenv(dotenv_path=env_path)

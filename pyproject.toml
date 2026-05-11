@@ -47,8 +47,9 @@ dependencies = [
     # week6
     "openpyxl>=3.1.5",
     "torch>=2.11.0",
+    "torchvision>=0.26.0",
 ]
 
 [tool.setuptools]
-packages = ["week1", "week2", "week3", "week4", "week5", "week6"]
+packages = ["week1", "week2", "week3", "week4", "week5", "week6", "week7"]
 py-modules = ["config"]
