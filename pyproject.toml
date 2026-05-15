@@ -50,6 +50,10 @@ dependencies = [
     "torchvision>=0.26.0",
     "opencv-python>=4.13.0.92",
     "torchsummary>=1.5.1",
+    "easyocr==1.7.0",
+    "python-bidi==0.4.2",
+    "pytesseract>=0.3.13",
+    "openai>=2.36.0",
 ]
 
 [tool.setuptools]

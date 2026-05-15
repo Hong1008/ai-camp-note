@@ -17,23 +17,14 @@
     - **Employee Attrition**: 불균형 데이터 대응
     - **MNIST Intro**: 이미지 전처리 및 다중 분류 기초
 
-### 🔴 Theme 19: CNN 심화 및 컬러 이미지 분류 (2026-05-13)
-컬러 이미지 데이터셋(CIFAR-10)을 활용하여 더 깊은 네트워크를 설계하고, 과적합을 방지하기 위한 정규화 및 증강 기법을 학습합니다.
+### 🟣 [x] Theme 21: 실전 딥러닝 파이프라인 및 모델 서빙 (2026-05-15)
+7주차를 마무리하며, 전이 학습 모델의 성능을 극대화하기 위한 스케줄링 기법과 학습된 모델을 저장/로드하여 실제 추론에 활용하는 파이프라인을 구축합니다.
 
-- **핵심 키워드**: RGB Color Channels, Data Augmentation, Dropout, Batch Normalization, Global Average Pooling
+- **핵심 키워드**: Learning Rate Scheduler (Cosine Annealing), Early Stopping, Model Save/Load, Inference Pipeline, TTA (Test Time Augmentation)
 - **주요 실습**:
-    - **CIFAR-10 Classification**: 컬러 이미지 특화 CNN 설계
-    - **Performance Tuning**: Dropout 및 BN 적용 전후 성능 비교
-    - **Augmentation Pipeline**: `torchvision.transforms`를 이용한 실시간 증강
-
-### 🔵 Theme 20: 전이 학습(Transfer Learning) 및 실무 모델 활용 (2026-05-14)
-거대 데이터셋으로 학습된 모델을 목적에 맞게 재사용하는 전이 학습 기법을 배우고, 실무 수준의 이미지 분류 성능을 달성합니다.
-
-- **핵심 키워드**: Transfer Learning, Feature Extraction, Fine-Tuning, Pre-trained Model (ResNet, VGG), Weights
-- **주요 실습**:
-    - **ResNet-18 Transfer**: 사전 학습 모델 로드 및 Classifier 수정
-    - **Freezing Strategy**: `requires_grad`를 이용한 학습 범위 조절
-    - **ImageNet Stats**: 모델에 특화된 정규화 및 전처리 적용
+    - **Advanced Optimization**: Scheduler 및 Early Stopping 적용 실습
+    - **Inference System**: 단일 이미지 입력에 대한 모델 예측 및 결과 가시화
+    - **Final Project**: CIFAR-10 고성능 분류기 완성 및 저장
 
 ---
 
@@ -43,15 +34,18 @@
 - [05-11.ipynb](05-11.ipynb): 보스턴/타이타닉/이직예측 딥러닝 실습 전체 과정 (완료)
 - [05-12.ipynb](05-12.ipynb): CNN 기초 및 MNIST 이미지 분류 실습 (완료)
 - [05-13.ipynb](05-13.ipynb): CIFAR-10 컬러 이미지 분류 및 성능 고도화 (완료)
-- [05-14.ipynb](05-14.ipynb): 전이 학습 및 사전 학습 모델 활용 실습 (진행 중)
+- [05-14.ipynb](05-14.ipynb): 전이 학습 및 사전 학습 모델 활용 실습 (완료)
+- [05-15.ipynb](05-15.ipynb): 실전 딥러닝 파이프라인 및 모델 서빙 (완료)
 - **트러블슈팅 리포트**:
     - [2026-05-11 리포트](./troubleshooting/2026-05-11.md): 과적합 제어 전략 및 불균형 데이터 해결 리포트
     - [2026-05-12 리포트](./troubleshooting/2026-05-12.md): CNN 차원 계산 및 ROI 종횡비 왜곡 해결 리포트 (완료)
     - [2026-05-13 리포트](./troubleshooting/2026-05-13.md): CIFAR-10 전처리 및 Augmentation 전략 리포트 (완료)
-    - [2026-05-14 리포트](./troubleshooting/2026-05-14.md): 전이 학습 전략 및 모델 튜닝 리포트 (진행 중)
+    - [2026-05-14 리포트](./troubleshooting/2026-05-14.md): 전이 학습 전략 및 모델 튜닝 리포트 (완료)
+    - [2026-05-15 리포트](./troubleshooting/2026-05-15.md): 모델 서빙 및 성능 고도화 리포트 (완료)
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
 - **Libraries**: `PyTorch`, `Scikit-Learn`, `Pandas`, `NumPy`, `OpenCV`
 - **Architecture**: Multi-Layer Perceptron (MLP), Convolutional Neural Networks (CNN), Transfer Learning (ResNet)
+- **Advanced**: Cosine Annealing LR, Early Stopping, Serialization

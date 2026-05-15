@@ -22,3 +22,6 @@ practice.ipynb
 # CIFAR-10 data
 week7/*.tar.gz
 week7/cifar-10-batches-py/
+
+# Video files
+*.mp4
