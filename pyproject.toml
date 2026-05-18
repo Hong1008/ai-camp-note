@@ -7,7 +7,7 @@ name = "ai-camp-note"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     # week1
     "jpype1>=1.6.0",
@@ -54,6 +54,10 @@ dependencies = [
     "python-bidi==0.4.2",
     "pytesseract>=0.3.13",
     "openai>=2.36.0",
+    "mediapipe>=0.10.35",
+    "opencv-contrib-python>=4.13.0.92",
+    "paddleocr[all]>=2.10.0",
+    "paddlepaddle>=3.3.1",
 ]
 
 [tool.setuptools]
