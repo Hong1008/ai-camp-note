@@ -58,6 +58,7 @@ dependencies = [
     "opencv-contrib-python>=4.13.0.92",
     "paddleocr[all]>=2.10.0",
     "paddlepaddle>=3.3.1",
+    "ultralytics>=8.4.51",
 ]
 
 [tool.setuptools]
