@@ -27,6 +27,30 @@
     - **pyLDAvis 대시보드 시각화**: 차원 축소 기법(t-SNE/MDS)을 활용해 2차원 공간 상에 토픽 간 거리를 맵핑하여 5가지 토픽이 겹치지 않고 잘 분리되었음을 시각적으로 확인
     - **람다($\lambda$) 튜닝**: $\lambda \approx 0.6$ 설정을 통해 범용 단어와 각 토픽의 독점적 단어 간 최적의 균형점을 도출하여 정밀 라벨링 프로세스 확보
 
+### 🟢 Theme 27: 텍스트 네트워크 분석 (Semantic Network Analysis) (2026-06-01)
+텍스트 내 단어들 간의 동시 출현(Co-occurrence) 관계를 규명하고, 이를 시각적 네트워크로 구상했습니다.
+- **핵심 성과**:
+    - **동시 출현 빈도 기반 가중 그래프 생성**: 리뷰 내에서 함께 출현한 단어 쌍을 집계하고 `NetworkX`를 사용해 가중치 엣지를 갖는 그래프로 시각화
+    - **중심성 지표 분석**: 연결 중심성(Degree Centrality), 매개 중심성(Betweenness Centrality), 근접 중심성(Closeness Centrality)을 도출하여 텍스트 내 중추적인 역할을 담당하는 핵심 의미 명사 매핑 완료
+
+### 🟢 Theme 28: 머신러닝 기반 한국어 감성 분석 (Sentiment Analysis) (2026-06-01)
+NSMC 데이터셋과 배달의민족 리뷰를 활용해 긍/부정 감성 분류 모델을 구축하고 비즈니스 분석 파이프라인으로 연결했습니다.
+- **핵심 성과**:
+    - **Pandera 스키마 검증**: 데이터 입력 단계에서 결측치 및 타입, 라벨의 유효 범위([0, 1])를 사전 검증하여 실무용 파이프라인의 견고함 확보
+    - **감성 분류 예측 모델 비교**: Kiwi 형태소 토큰화 + TF-IDF 특징 추출 후, Logistic Regression(정확도 우수, 과적합 제어)과 LightGBM 모델의 성능 및 혼동 행렬을 다각도 분석
+    - **비즈니스 부정 피드백 탐지 연계**: 학습 모델을 배달의민족 리뷰에 적용해 Sentiment Score(긍정 확률)를 산출하고, 0.3 이하의 부정적 리뷰 데이터셋만을 필터링하여 사용자 불만 키워드에 대한 2차 Semantic Network를 시각화함으로써 비즈니스 취약 부문(예: '고객센터', '전화', '연결', '지연') 즉각 탐지 체계 구축
+
+### 🟢 [미니프로젝트]: 서울자전거 따릉이 VOC 분석 리포트 (2026-06-01)
+Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 한국어 텍스트 분석 파이프라인(빈도, 네트워크, 토픽, 감성 모델)을 종합한 실무 리포트를 작성했습니다.
+- **핵심 성과**:
+    - **공식 API 기반 크롤링 우회**: app-store-scraper의 인코딩/토큰 변경 버그를 우회하기 위해 **iTunes RSS Feed JSON API**를 활용한 500건 다이렉트 수집 코드 확보
+    - **Kiwi 형태소 사전 튜닝**: `'개발자모드'`, `'대여소'`, `'정기권'` 등을 사용자 정의 단어 사전에 등록하여 형태소 경계 오작동 최소화
+    - **LDA 토픽별 문서 점유 비중 검증**: 4개 토픽의 정량적 점유율(시스템 에러 36.6%, 긍정적 이용 28.0%, 대여 장애 27.2%, 지도 불편 8.1%)을 산출하여 모델 최적화(K=4) 정당성 확보
+    - **NetworkX 단어 네트워크 임계치 튜닝**: THRESHOLD=150 상향 설정을 통해 완전 그래프 쏠림 현상을 해소하고, `'이용'`과 `'대여'`를 핵심 허브 노드로 삼는 의미 네트워크 컴포넌트 규명
+    - **감성 모델 피처 가중치 검증**: TF-IDF + Logistic Regression 모델(정확도 **85.34%**)을 학습하고, 회귀 가중치를 분석하여 `'세금'`, `'공무원'`, `'걸어가'`, `'날리'` 등 공적 불만 및 사용자 피해 키워드 포착
+    - **우선순위 기반 개선 전략 제안**: 토픽 점유율 비중을 기준으로 리소스 투입 우선순위(서버 안정화 -> 블루투스 페어링 -> 롱테일 보안 및 지도 UI 튜닝)를 설계한 개선 기획 제안서 수립
+
+
 ---
 
 ## 📊 한국어 형태소 분석기 비교 분석
@@ -60,11 +84,15 @@
 
 ### 📓 실습 노트북 및 리포트
 - [05-26.ipynb](05-26.ipynb): 텍스트 정규화, 형태소 분석, Whitelist 기반 전처리, TF-IDF 평균 키워드 정제, 코사인 유사도 검색 파이프라인 구현체
+- [06-01.ipynb](06-01.ipynb): 텍스트 동시 출현(Co-occurrence) 빈도 및 중심성 분석(Degree, Betweenness, Closeness) 시각화, NSMC 감성 분류기(Logistic Regression / LightGBM) 모델 학습 및 Pandera 스키마 검증, 배민 부정 리뷰 2차 네트워크 시각화 분석 연계 실습 파일
+- [따릉이_VOC_분석_리포트.ipynb](따릉이_VOC_분석_리포트.ipynb): Play Store 9.6k 리뷰 데이터 기반의 전처리, 빈도 분석, LDA 토픽 모델링(K=4), 단어 네트워크(임계치 150) 및 감성 예측 피처 분석 기반의 VOC 분석 프로젝트 완결 노트북
 - [troubleshooting/2026-05-26.md](troubleshooting/2026-05-26.md): KoNLPy Mecab 실행 오류 및 WSL 환경 의존성 해결(Engine 컴파일/바인딩 설치 및 Kiwi 대안 적용) 리포트
+- [troubleshooting/VOC_analysis_troubleshooting.md](troubleshooting/VOC_analysis_troubleshooting.md): 앱스토어 수집기 KeyError(latin-1), 네트워크 중심성 쏠림 튜닝(THRESHOLD=150), 비지도 LDA 임의성 교정을 위한 지배 토픽 비중 검증 코드 설계 등 트러블슈팅 기록
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Libraries**: `KoNLPy`, `kiwipiepy`, `Scikit-learn` (`TfidfVectorizer`, `CountVectorizer`, `LatentDirichletAllocation`, `cosine_similarity`), `pyLDAvis`, `NumPy`, `Pandas`, `Matplotlib`
-- **Dataset**: `배달의민족댓글.csv` (사용자 평점 및 리뷰 데이터)
+- **Libraries**: `KoNLPy`, `kiwipiepy`, `Scikit-learn` (`TfidfVectorizer`, `CountVectorizer`, `LatentDirichletAllocation`, `cosine_similarity`, `LogisticRegression`), `networkx`, `pandera`, `lightgbm`, `pyLDAvis`, `NumPy`, `Pandas`, `Matplotlib`
+- **Dataset**: `배달의민족댓글.csv` (사용자 평점 및 리뷰 데이터), `ratings_train.txt` & `ratings_test.txt` (NSMC 감성 분류 학습 및 검증 데이터)
+
 

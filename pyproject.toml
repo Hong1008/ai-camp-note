@@ -63,6 +63,8 @@ dependencies = [
     "nltk>=3.9.4",
     "kiwipiepy>=0.20.0",
     "pyldavis>=3.4.1",
+    "apyori>=1.1.2",
+    "google-play-scraper>=1.2.7",
 ]
 
 [tool.setuptools]

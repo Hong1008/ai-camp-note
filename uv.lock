@@ -21,9 +21,11 @@ name = "ai-camp-note"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "apyori" },
     { name = "beautifulsoup4" },
     { name = "easyocr" },
     { name = "folium" },
+    { name = "google-play-scraper" },
     { name = "imbalanced-learn" },
     { name = "joblib" },
     { name = "jpype1" },
@@ -72,9 +74,11 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "apyori", specifier = ">=1.1.2" },
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
     { name = "easyocr", specifier = "==1.7.0" },
     { name = "folium", specifier = ">=0.20.0" },
+    { name = "google-play-scraper", specifier = ">=1.2.7" },
     { name = "imbalanced-learn", specifier = ">=0.14.1" },
     { name = "joblib", specifier = ">=1.5.3" },
     { name = "jpype1", specifier = ">=1.6.0" },
@@ -212,6 +216,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/35/5d/752690df9ef5b76e1
 wheels = [
     { url = "https://files.pythonhosted.org/packages/81/29/5ecc3a15d5a33e31b26c11426c45c501e439cb865d0bff96315d86443b78/appnope-0.1.4-py2.py3-none-any.whl", hash = "sha256:502575ee11cd7a28c0205f379b525beefebab9d161b7c964670864014ed7213c", size = 4321, upload-time = "2024-02-06T09:43:09.663Z" },
 ]
+
+[[package]]
+name = "apyori"
+version = "1.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5e/62/5ffde5c473ea4b033490617ec5caa80d59804875ad3c3c57c0976533a21a/apyori-1.1.2.tar.gz", hash = "sha256:e2e6ffcf14732b1b1432608cf83b81ac538243387b0458eb7d9296e770d462ec", size = 8639, upload-time = "2019-11-29T17:27:33.49Z" }
 
 [[package]]
 name = "argon2-cffi"
@@ -796,6 +806,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/33/f6/354ae6491228b5eb40e10d89c4d13c651fe1cf7556e35ebdded50cff57ce/gitpython-3.1.50.tar.gz", hash = "sha256:80da2d12504d52e1f998772dc5baf6e553f8d2fcfe1fcc226c9d9a2ee3372dcc", size = 219798, upload-time = "2026-05-06T04:01:26.571Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/20/7a/1c6e3562dfd8950adbb11ffbc65d21e7c89d01a6e4f137fa981056de25c5/gitpython-3.1.50-py3-none-any.whl", hash = "sha256:d352abe2908d07355014abdd21ddf798c2a961469239afec4962e9da884858f9", size = 212507, upload-time = "2026-05-06T04:01:23.799Z" },
+]
+
+[[package]]
+name = "google-play-scraper"
+version = "1.2.7"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/db/29/3530af5fee212e7cdd31a5847ecb306c8202745f08dc608de10454a82499/google_play_scraper-1.2.7.tar.gz", hash = "sha256:284f321d1b2c39e39e97e490d51bc316e1d876802360efb7e7463b5c16ed4972", size = 41734, upload-time = "2024-06-07T01:03:11.325Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/33/f7/a23ef3cf8efc9ab3aee565971f59906811e6ce95475314ef7b18d02f30ba/google_play_scraper-1.2.7-py3-none-any.whl", hash = "sha256:a485510b09265f0096fc3813cfc26eef27e9a5c0035f99ee23f80e00de724530", size = 28988, upload-time = "2024-06-07T01:03:09.144Z" },
 ]
 
 [[package]]
