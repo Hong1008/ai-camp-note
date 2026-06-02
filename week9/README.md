@@ -50,6 +50,19 @@ Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 �
     - **감성 모델 피처 가중치 검증**: TF-IDF + Logistic Regression 모델(정확도 **85.34%**)을 학습하고, 회귀 가중치를 분석하여 `'세금'`, `'공무원'`, `'걸어가'`, `'날리'` 등 공적 불만 및 사용자 피해 키워드 포착
     - **우선순위 기반 개선 전략 제안**: 토픽 점유율 비중을 기준으로 리소스 투입 우선순위(서버 안정화 -> 블루투스 페어링 -> 롱테일 보안 및 지도 UI 튜닝)를 설계한 개선 기획 제안서 수립
 
+### 🟢 Theme 29: 워드 임베딩 및 순환 신경망 (RNN, LSTM) 기초 (2026-06-02)
+텍스트의 고차원 표현 기법인 워드 임베딩과 시퀀스 데이터를 처리하기 위한 순환 신경망 아키텍처의 동작 원리를 다루었습니다.
+- **핵심 성과**:
+    - **정적 워드 임베딩 분석**: Word2Vec(CBOW vs Skip-gram), GloVe, FastText의 알고리즘별 특징과 단어 간 코사인 유사도 분석 실습 진행
+    - **Char-level RNN 언어 모델 구현**: PyTorch를 활용하여 문자 단위 다음 문자 예측 데이터셋을 구축하고, 텍스트 생성이 가능한 Char-RNN LM 모델 학습 완료
+    - **LSTM NumPy 직접 구현 (From Scratch)**: 게이트 메커니즘(Forget, Input, Candidate, Output) 및 Cell State 전달 체계를 프레임워크 없이 NumPy만으로 순전파/BPTT 역전파 연산을 바닥부터 구현하여 동작 원리 입증
+
+### 🟢 Theme 30: LSTM 기반 시계열 주가 예측 실습 (2026-06-02)
+시간 축을 가지는 시계열 데이터의 특성을 이해하고, LSTM 모델을 활용하여 종가 예측 분석을 수행했습니다.
+- **핵심 성과**:
+    - **주가 데이터 수집 및 정제**: `yfinance`를 사용하여 네이버(NAVER, 035420.KS)의 역사적 주가를 수집하고, `MinMaxScaler`를 통해 피처 스케일 정규화 완료
+    - **슬라이딩 윈도우 시퀀스 데이터 구축**: 과거 30일의 종가 시퀀스를 통해 바로 다음 날의 주가를 예측하는 지도 학습용 $X, y$ 데이터 파이프라인 설계
+    - **Autoregressive 미래 예측**: 학습 완료된 PyTorch LSTM 모델을 평가 데이터로 검증하고, 예측값을 재입력으로 활용하는 순환적(Roll-forward) 방식으로 향후 30일간의 미래 주가를 예측하여 시각화
 
 ---
 
@@ -85,6 +98,7 @@ Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 �
 ### 📓 실습 노트북 및 리포트
 - [05-26.ipynb](05-26.ipynb): 텍스트 정규화, 형태소 분석, Whitelist 기반 전처리, TF-IDF 평균 키워드 정제, 코사인 유사도 검색 파이프라인 구현체
 - [06-01.ipynb](06-01.ipynb): 텍스트 동시 출현(Co-occurrence) 빈도 및 중심성 분석(Degree, Betweenness, Closeness) 시각화, NSMC 감성 분류기(Logistic Regression / LightGBM) 모델 학습 및 Pandera 스키마 검증, 배민 부정 리뷰 2차 네트워크 시각화 분석 연계 실습 파일
+- [06-02.ipynb](06-02.ipynb): Gensim Word2Vec 실습, PyTorch 기반 Char-RNN LM 텍스트 생성 실습, NumPy 기반 LSTM 순전파/BPTT 역전파 직접 구현, yfinance 및 PyTorch LSTM 기반 네이버(035420.KS) 주가 예측 및 30일 미래 예측(Autoregressive) 실습
 - [따릉이_VOC_분석_리포트.ipynb](따릉이_VOC_분석_리포트.ipynb): Play Store 9.6k 리뷰 데이터 기반의 전처리, 빈도 분석, LDA 토픽 모델링(K=4), 단어 네트워크(임계치 150) 및 감성 예측 피처 분석 기반의 VOC 분석 프로젝트 완결 노트북
 - [troubleshooting/2026-05-26.md](troubleshooting/2026-05-26.md): KoNLPy Mecab 실행 오류 및 WSL 환경 의존성 해결(Engine 컴파일/바인딩 설치 및 Kiwi 대안 적용) 리포트
 - [troubleshooting/VOC_analysis_troubleshooting.md](troubleshooting/VOC_analysis_troubleshooting.md): 앱스토어 수집기 KeyError(latin-1), 네트워크 중심성 쏠림 튜닝(THRESHOLD=150), 비지도 LDA 임의성 교정을 위한 지배 토픽 비중 검증 코드 설계 등 트러블슈팅 기록
@@ -92,7 +106,7 @@ Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 �
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Libraries**: `KoNLPy`, `kiwipiepy`, `Scikit-learn` (`TfidfVectorizer`, `CountVectorizer`, `LatentDirichletAllocation`, `cosine_similarity`, `LogisticRegression`), `networkx`, `pandera`, `lightgbm`, `pyLDAvis`, `NumPy`, `Pandas`, `Matplotlib`
-- **Dataset**: `배달의민족댓글.csv` (사용자 평점 및 리뷰 데이터), `ratings_train.txt` & `ratings_test.txt` (NSMC 감성 분류 학습 및 검증 데이터)
+- **Libraries**: `KoNLPy`, `kiwipiepy`, `Scikit-learn` (`TfidfVectorizer`, `CountVectorizer`, `LatentDirichletAllocation`, `cosine_similarity`, `LogisticRegression`), `networkx`, `pandera`, `lightgbm`, `pyLDAvis`, `NumPy`, `Pandas`, `Matplotlib`, `Gensim` (`Word2Vec`), `PyTorch` (`torch`), `yfinance`, `Plotly`
+- **Dataset**: `배달의민족댓글.csv` (사용자 평점 및 리뷰 데이터), `ratings_train.txt` & `ratings_test.txt` (NSMC 감성 분류 학습 및 검증 데이터), `nasdaq.csv`
 
 

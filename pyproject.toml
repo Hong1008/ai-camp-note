@@ -65,6 +65,9 @@ dependencies = [
     "pyldavis>=3.4.1",
     "apyori>=1.1.2",
     "google-play-scraper>=1.2.7",
+    "gensim>=4.4.0",
+    "tqdm>=4.67.3",
+    "yfinance>=1.4.1",
 ]
 
 [tool.setuptools]
