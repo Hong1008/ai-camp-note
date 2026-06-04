@@ -64,6 +64,13 @@ Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 �
     - **슬라이딩 윈도우 시퀀스 데이터 구축**: 과거 30일의 종가 시퀀스를 통해 바로 다음 날의 주가를 예측하는 지도 학습용 $X, y$ 데이터 파이프라인 설계
     - **Autoregressive 미래 예측**: 학습 완료된 PyTorch LSTM 모델을 평가 데이터로 검증하고, 예측값을 재입력으로 활용하는 순환적(Roll-forward) 방식으로 향후 30일간의 미래 주가를 예측하여 시각화
 
+### 🟢 Theme 31: Transformer - Scaled Dot-Product Attention 실습 (2026-06-04)
+트랜스포머 아키텍처의 핵심 원리와 최신 LLM 작동 메커니즘을 학습했습니다.
+- **핵심 성과**:
+    - **Scaled Dot-Product Attention 구현 및 검증**: PyTorch 모듈을 사용하여 Q, K, V 간 내적 연산, 스케일링, Softmax, 가중치 산출 파이프라인을 직접 코딩하여 동작 원리 검증 완료
+    - **Attention Map 시각화**: 모의 시퀀스 데이터("I study deep learning")의 가중치를 히트맵으로 그려 단어 쌍 간의 문맥 연관성을 눈으로 확인 및 스케일링 유무에 따른 차이 비교
+    - **LLM 핵심 컴포넌트 분석**: Multi-Head Attention, $O(N^2)$ 메모리 한계성(Context Window 한계점), Causal Masking(컨닝 방지) 및 최신 Gemma 4 12B의 인코더 없는 멀티모달 통합 구조 학습
+
 ---
 
 ## 📊 한국어 형태소 분석기 비교 분석
@@ -99,6 +106,7 @@ Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 �
 - [05-26.ipynb](05-26.ipynb): 텍스트 정규화, 형태소 분석, Whitelist 기반 전처리, TF-IDF 평균 키워드 정제, 코사인 유사도 검색 파이프라인 구현체
 - [06-01.ipynb](06-01.ipynb): 텍스트 동시 출현(Co-occurrence) 빈도 및 중심성 분석(Degree, Betweenness, Closeness) 시각화, NSMC 감성 분류기(Logistic Regression / LightGBM) 모델 학습 및 Pandera 스키마 검증, 배민 부정 리뷰 2차 네트워크 시각화 분석 연계 실습 파일
 - [06-02.ipynb](06-02.ipynb): Gensim Word2Vec 실습, PyTorch 기반 Char-RNN LM 텍스트 생성 실습, NumPy 기반 LSTM 순전파/BPTT 역전파 직접 구현, yfinance 및 PyTorch LSTM 기반 네이버(035420.KS) 주가 예측 및 30일 미래 예측(Autoregressive) 실습
+- [06-04.ipynb](06-04.ipynb): Scaled Dot-Product Attention 동작 원리 NumPy/PyTorch 구현 및 가중치 히트맵 시각화 실습
 - [따릉이_VOC_분석_리포트.ipynb](따릉이_VOC_분석_리포트.ipynb): Play Store 9.6k 리뷰 데이터 기반의 전처리, 빈도 분석, LDA 토픽 모델링(K=4), 단어 네트워크(임계치 150) 및 감성 예측 피처 분석 기반의 VOC 분석 프로젝트 완결 노트북
 - [troubleshooting/2026-05-26.md](troubleshooting/2026-05-26.md): KoNLPy Mecab 실행 오류 및 WSL 환경 의존성 해결(Engine 컴파일/바인딩 설치 및 Kiwi 대안 적용) 리포트
 - [troubleshooting/VOC_analysis_troubleshooting.md](troubleshooting/VOC_analysis_troubleshooting.md): 앱스토어 수집기 KeyError(latin-1), 네트워크 중심성 쏠림 튜닝(THRESHOLD=150), 비지도 LDA 임의성 교정을 위한 지배 토픽 비중 검증 코드 설계 등 트러블슈팅 기록
@@ -106,7 +114,7 @@ Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 �
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Libraries**: `KoNLPy`, `kiwipiepy`, `Scikit-learn` (`TfidfVectorizer`, `CountVectorizer`, `LatentDirichletAllocation`, `cosine_similarity`, `LogisticRegression`), `networkx`, `pandera`, `lightgbm`, `pyLDAvis`, `NumPy`, `Pandas`, `Matplotlib`, `Gensim` (`Word2Vec`), `PyTorch` (`torch`), `yfinance`, `Plotly`
+- **Libraries**: `KoNLPy`, `kiwipiepy`, `Scikit-learn` (`TfidfVectorizer`, `CountVectorizer`, `LatentDirichletAllocation`, `cosine_similarity`, `LogisticRegression`), `networkx`, `pandera`, `lightgbm`, `pyLDAvis`, `NumPy`, `Pandas`, `Matplotlib`, `Seaborn`, `Gensim` (`Word2Vec`), `PyTorch` (`torch`), `yfinance`, `Plotly`
 - **Dataset**: `배달의민족댓글.csv` (사용자 평점 및 리뷰 데이터), `ratings_train.txt` & `ratings_test.txt` (NSMC 감성 분류 학습 및 검증 데이터), `nasdaq.csv`
 
 
