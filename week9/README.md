@@ -71,6 +71,25 @@ Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 �
     - **Attention Map 시각화**: 모의 시퀀스 데이터("I study deep learning")의 가중치를 히트맵으로 그려 단어 쌍 간의 문맥 연관성을 눈으로 확인 및 스케일링 유무에 따른 차이 비교
     - **LLM 핵심 컴포넌트 분석**: Multi-Head Attention, $O(N^2)$ 메모리 한계성(Context Window 한계점), Causal Masking(컨닝 방지) 및 최신 Gemma 4 12B의 인코더 없는 멀티모달 통합 구조 학습
 
+### 🟢 Theme 32: Transformer - Multi-Head Attention & BERT 감성 분석 실습 (2026-06-05)
+트랜스포머의 병렬 처리 핵심인 Multi-Head Attention을 직접 구현하고, 사전학습 모델 파인튜닝과 런타임 데이터 검증 파이프라인을 구축했습니다.
+- **핵심 성과**:
+    - **Multi-Head Attention PyTorch 구현**: Q, K, V 사영(Projection), 차원 분할($[B, S, D] \rightarrow [B, h, S, d_k]$), 병렬 어텐션 연산 및 병합($\text{Concat}$) 전 과정을 PyTorch로 완성하여 텐서 동작 규격 검증 완료
+    - **Pandera 기반 데이터 무결성 검증**: NLP 입력 데이터의 타입, 결측치 및 라벨 유효 범위([0, 1])를 런타임에 자동 검증하여 배포 단계에서의 예외 사전 예방
+    - **Hugging Face BERT 연동**: `klue/bert-base` 토크나이저 및 시퀀스 분류 모델 활용, PyTorch 커스텀 Dataset/DataLoader 및 원스텝 학습/역전파 루프 구축 완료
+
+### 🟢 Theme 33: Document Summarization & ROUGE Evaluation (2026-06-05)
+Seq2Seq 기반 인코더-디코더 트랜스포머 모델을 활용해 영문/국문 텍스트 생성 요약을 수행하고 정량 평가지표 파이프라인을 구축했습니다.
+- **핵심 성과**:
+    - **Seq2Seq 추론 메커니즘 수립**: `distilbart-cnn`, `t5-small`, `KoBART`, `mT5` 모델을 활용해 빔 서치(Beam Search) 및 반복 차단(`no_repeat_ngram_size`) 매개변수를 제어한 고성능 생성 요약 파이프라인 개발
+    - **한글 ROUGE 스코어링 우회 (Workaround)**: 구글 `rouge-score` 라이브러리의 유니코드 한글 검열 버그를 우회하기 위해, 형태소 분리(`Kiwi`)된 한글 어절을 가상의 영어 고유 ID로 일대일 매핑 치환하는 한글 ROUGE 스코어링 평가 모듈 개발 및 성능(KoBART vs mT5) 검증 성공
+
+### 🟢 [사이드프로젝트]: 유희왕 카드 텍스트 요약 및 이름 분류기 기획
+YGOPRODeck v7 공식 API 데이터를 5년치 수집하여, 고도로 템플릿화된 유희왕 카드 효과 본문을 바탕으로 요약 및 이름 매핑 예측을 시뮬레이션했습니다.
+- **핵심 성과**:
+    - **그룹 데이터 누수(Group Leakage)의 규명**: 카드군 테마(`archetype`) 내부의 텍스트 유사성으로 인해 발생하는 숏컷 학습(ROUGE 92% 돌파)을 진단하고, 아키타입별 그룹 분할(Group Split) 데이터 파이프라인을 구축하여 엄격한 일반화 성능 평가 구조 설계
+    - **요약 엔진 고도화 설계안 수립**: 텍스트 내 카드명 마스킹(`[MASK]`) 기법 및 LLM API를 활용한 요약문 정답지 생성(Synthetic Data Generation) 및 T5 지식 증류(Knowledge Distillation) 학습 프로세스 기획
+
 ---
 
 ## 📊 한국어 형태소 분석기 비교 분석
@@ -107,14 +126,17 @@ Play Store 대용량 데이터(9.6k)와 App Store RSS API를 직접 활용해 �
 - [06-01.ipynb](06-01.ipynb): 텍스트 동시 출현(Co-occurrence) 빈도 및 중심성 분석(Degree, Betweenness, Closeness) 시각화, NSMC 감성 분류기(Logistic Regression / LightGBM) 모델 학습 및 Pandera 스키마 검증, 배민 부정 리뷰 2차 네트워크 시각화 분석 연계 실습 파일
 - [06-02.ipynb](06-02.ipynb): Gensim Word2Vec 실습, PyTorch 기반 Char-RNN LM 텍스트 생성 실습, NumPy 기반 LSTM 순전파/BPTT 역전파 직접 구현, yfinance 및 PyTorch LSTM 기반 네이버(035420.KS) 주가 예측 및 30일 미래 예측(Autoregressive) 실습
 - [06-04.ipynb](06-04.ipynb): Scaled Dot-Product Attention 동작 원리 NumPy/PyTorch 구현 및 가중치 히트맵 시각화 실습
+- [06-05.ipynb](06-05.ipynb): Multi-Head Attention 직접 구현 및 텐서 차원 검증, Pandera 데이터 무결성 검증, klue/bert-base 기반 긍/부정 감성 분류 원스텝 파인튜닝 파이프라인 구축 실습 노트북
+- [유희왕_카드_요약하기.ipynb](유희왕_카드_요약하기.ipynb): YGOPRODeck API 기반 카드 텍스트 수집 및 T5 모델 연계 이름 예측 추론 테스트, 그룹 분할(Group Split) 데이터셋 파이프라인 구축 실습 노트북
 - [따릉이_VOC_분석_리포트.ipynb](따릉이_VOC_분석_리포트.ipynb): Play Store 9.6k 리뷰 데이터 기반의 전처리, 빈도 분석, LDA 토픽 모델링(K=4), 단어 네트워크(임계치 150) 및 감성 예측 피처 분석 기반의 VOC 분석 프로젝트 완결 노트북
 - [troubleshooting/2026-05-26.md](troubleshooting/2026-05-26.md): KoNLPy Mecab 실행 오류 및 WSL 환경 의존성 해결(Engine 컴파일/바인딩 설치 및 Kiwi 대안 적용) 리포트
 - [troubleshooting/VOC_analysis_troubleshooting.md](troubleshooting/VOC_analysis_troubleshooting.md): 앱스토어 수집기 KeyError(latin-1), 네트워크 중심성 쏠림 튜닝(THRESHOLD=150), 비지도 LDA 임의성 교정을 위한 지배 토픽 비중 검증 코드 설계 등 트러블슈팅 기록
+- [troubleshooting/2026-06-05.md](troubleshooting/2026-06-05.md): Pandera DataFrameModel, Transformers v5 마이그레이션(AdamW, encode_plus), NLTK 한글 ROUGE 0.0 검열 버그 우회 기록
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Libraries**: `KoNLPy`, `kiwipiepy`, `Scikit-learn` (`TfidfVectorizer`, `CountVectorizer`, `LatentDirichletAllocation`, `cosine_similarity`, `LogisticRegression`), `networkx`, `pandera`, `lightgbm`, `pyLDAvis`, `NumPy`, `Pandas`, `Matplotlib`, `Seaborn`, `Gensim` (`Word2Vec`), `PyTorch` (`torch`), `yfinance`, `Plotly`
-- **Dataset**: `배달의민족댓글.csv` (사용자 평점 및 리뷰 데이터), `ratings_train.txt` & `ratings_test.txt` (NSMC 감성 분류 학습 및 검증 데이터), `nasdaq.csv`
+- **Libraries**: `KoNLPy`, `kiwipiepy`, `Scikit-learn`, `networkx`, `pandera`, `lightgbm`, `pyLDAvis`, `NumPy`, `Pandas`, `Matplotlib`, `Seaborn`, `Gensim`, `PyTorch`, `yfinance`, `Plotly`, `transformers`, `datasets`, `evaluate`, `rouge-score`, `sentencepiece`, `tiktoken`
+- **Dataset**: `배달의민족댓글.csv`, `ratings_train.txt` & `ratings_test.txt` (NSMC), `nasdaq.csv`, `yugioh_dataset.csv` (합성/수집)
 
 

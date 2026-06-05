@@ -33,3 +33,5 @@ NAVER_CLIENT_ID = os.getenv('NAVAR_CLIENT_ID')
 NAVER_CLIENT_SECRET = os.getenv('NAVER_CLIENT_SECRET')
 NAVER_API_BASE_URL = os.getenv('NAVER_API_URL', 'https://openapi.naver.com/v1')
 NAVER_SEARCH_TREND_URL = f"{NAVER_API_BASE_URL}/datalab/search"
+
+GOOGLE_AI_API_KEY = os.getenv('GOOGLE_AI_API_KEY')
