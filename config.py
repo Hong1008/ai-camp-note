@@ -35,3 +35,4 @@ NAVER_API_BASE_URL = os.getenv('NAVER_API_URL', 'https://openapi.naver.com/v1')
 NAVER_SEARCH_TREND_URL = f"{NAVER_API_BASE_URL}/datalab/search"
 
 GOOGLE_AI_API_KEY = os.getenv('GOOGLE_AI_API_KEY')
+HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')

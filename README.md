@@ -19,6 +19,7 @@ SK FAMILY AI 캠프 30 과정에서 진행되는 **실습 소스코드**를 기�
 | **Week 7** | 딥러닝 심화 및 신경망 설계 | [바로가기 ➔](./week7/README.md) |
 | **Week 8** | 컴퓨터 비전 | [바로가기 ➔](./week8/README.md) |
 | **Week 9** | 자연어 처리 (NLP) 및 Deep Learning | [바로가기 ➔](./week9/README.md) |
+| **Week 10** | 추천 시스템 | [바로가기 ➔](./week10/README.md) |
 
 ---
 
