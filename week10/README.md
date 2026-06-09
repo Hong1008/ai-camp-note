@@ -36,13 +36,14 @@
 
 ### 📓 실습 노트북 및 리포트
 - [06-08.ipynb](06-08.ipynb): 10주차 추천시스템 핵심 알고리즘 및 평가 지표 실습 통합 노트북 (진행 중)
+- [06-09.ipynb](06-09.ipynb): google-genai SDK 활용 실습 노트북
 - **트러블슈팅 리포트**:
     - [troubleshooting/](./troubleshooting/): 10주차 실습 과정에서 발생하는 문제 상황 및 해결 가이드 기록 폴더
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Libraries**: `pandas`, `numpy`, `scikit-learn` (`TfidfVectorizer`, `cosine_similarity`), `scipy` (`scipy.sparse.linalg.svds`), `transformers`, `langchain-huggingface`
+- **Libraries**: `pandas`, `numpy`, `scikit-learn` (`TfidfVectorizer`, `cosine_similarity`), `scipy` (`scipy.sparse.linalg.svds`), `transformers`, `langchain-huggingface`, `google-genai`, `pydantic`
 - **Dataset**: `content/tmdb_5000_movies.csv` (TMDB 5000 Movies Dataset)
 
 ---
@@ -70,4 +71,26 @@
 ### 4. Chat Prompt 구조와 소형 모델의 한계
 * **지침**: 대화형 프롬프트 구성 시 `system` 역할(페르소나 지정)은 항상 대화의 최상단(Index 0)에 와야 함.
 * **분석**: 순서가 `[User] -> [System]` 형태로 꼬였을 때, 0.6B 크기의 극소형 모델은 지시 사항의 선후 흐름을 놓치고 마지막 메시지를 그대로 복사(Echoing)하는 오작동 패턴을 분석 및 입증함.
+
+
+---
+
+## 📝 2026-06-09 실습 및 피드백 정리 (Google GenAI SDK 실습)
+
+### 1. `client.models`와 `client.chats` 인터페이스 차이
+* **models (Stateless)**: 이전 대화 상태를 누적하지 않고 단발성 요청(요약, 분류, 정보 추출)을 처리하여 토큰 낭비와 응답 지연을 방지함.
+* **chats (Stateful)**: 내부적으로 대화 히스토리를 유지하며 관리하여 멀티턴 대화형 UX를 구현하기에 유용함.
+
+### 2. 구조화된 출력 (Structured Output) 및 Pydantic 매핑
+* **실습**: `types.GenerateContentConfig`의 `response_mime_type="application/json"`과 `response_schema`에 Pydantic 클래스를 등록하여, LLM 응답을 바로 검증된 Python 객체(`response.parsed`)로 얻는 방법을 구현함.
+
+### 3. API 응답 속도 최적화 전략
+* **스트리밍**: `generate_content_stream` 및 `send_message_stream`을 사용하여 첫 번째 토큰 속도(TTFT)를 줄임.
+* **토큰 한도와 우회**: 한국어 토큰 특성으로 인해 `max_output_tokens`를 낮게 설정하면 답변이 중간에 잘려 `response.text`가 `None`으로 변환될 수 있으며, 이때 `response.candidates[0].content.parts[0].text`로 원본 잘린 텍스트에 직접 접근하여 안전하게 회수하는 기법을 이해함.
+* **비동기 처리 & 캐싱**: `client.aio` 비동기 요청을 병렬화하여 처리 성능을 올리고, 32k 토큰 이상의 대형 참고자료에는 컨텍스트 캐싱(Context Caching)을 적용해 연산 오버헤드와 비용을 줄임.
+
+### 4. 모델 라벨별 특성 및 인프라 제약 조건
+* **gemma-4-26b-a4b-it**: MoE(Mixture of Experts) 기반 모델로, 로컬에서 구동할 때 활성화되는 파라미터는 4B급 수준으로 줄여 VRAM을 극도로 아끼며 뛰어난 성능을 보임.
+* **gemma-4-31b-it**: 31B 단일 Dense 모델로, 추론 시 VRAM 소모가 크나 더욱 정교하고 안정적인 추론이 가능함.
+* **gemini-3.1-flash-lite**: 상용 API 모델로서 극단적인 속도와 경제성을 확보한 경량화 모델로 로컬 GPU 하드웨어에 구속받지 않는 챗봇 배포에 최적화됨.
 
