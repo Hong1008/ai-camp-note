@@ -94,3 +94,19 @@
 * **gemma-4-31b-it**: 31B 단일 Dense 모델로, 추론 시 VRAM 소모가 크나 더욱 정교하고 안정적인 추론이 가능함.
 * **gemini-3.1-flash-lite**: 상용 API 모델로서 극단적인 속도와 경제성을 확보한 경량화 모델로 로컬 GPU 하드웨어에 구속받지 않는 챗봇 배포에 최적화됨.
 
+---
+
+## 📝 2026-06-10 실습 및 피드백 정리 (LangChain 기초 및 체인 구축 실습)
+
+### 1. LangChain 도입 목적과 추상화
+* **개념**: 특정 LLM 공급자(Gemini, OpenAI 등) API 종속성을 배제하고 통일된 인터페이스(`invoke`, `stream`)를 보장하기 위해 LangChain 도입.
+* **배움**: `init_chat_model`을 활용하여 `'google_genai:gemma-4-31b-it'` 등의 다양한 백엔드 모델을 표준 객체로 즉시 전환 및 생성하는 방법을 실습함.
+
+### 2. PromptTemplate vs ChatPromptTemplate
+* **PromptTemplate**: 단일 텍스트(String)를 입력값으로 채우는 템플릿으로 주로 텍스트 완성형 및 RAG 텍스트 결합에 사용.
+* **ChatPromptTemplate**: `System`, `Human`, `AI` 등의 대화 역할이 바인딩된 메시지 리스트를 생성. 역할 인지가 중요한 현대 Chat API(Gemini 등) 모델 구동에 적합.
+
+### 3. StrOutputParser 및 LCEL 스트리밍 체인
+* **StrOutputParser**: LLM 반환 복잡한 `AIMessage` 객체로부터 순수 텍스트 내용만 추출.
+* **LCEL**: 프롬프트, 모델, 파서를 파이프(`|`) 연산자로 선언적으로 엮는 기법.
+* **실습**: `chat_prompt | model | StrOutputParser()` 형태의 체인을 설계하여 스트리밍(`stream()`) 방식으로 텍스트를 실시간 터미널에 흘려보내는(flush) 로직을 완수함.
