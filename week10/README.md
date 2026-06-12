@@ -48,6 +48,12 @@ Pydantic을 활용한 구조화된 출력(Structured Output)과 LCEL의 병렬/�
 - **주요 실습**:
     - **LangChain 심화 실습**: 06-11 노트북을 활용하여 게임 캐릭터 카드 구조화 생성 및 병렬 처리 체인 구축 완수
 
+### 🟢 Theme 41: LangChain RAG(Retrieval-Augmented Generation) 시스템 기초 및 구현 (2026-06-12)
+외부 문서를 로드하고 의미 단위로 분할(Text Splitting)하여 고차원 벡터로 변환(Embedding)한 뒤, 벡터스토어에 저장하고 이를 LLM과 결합하여 질문에 대답하는 **RAG(검색 증강 생성) 시스템**의 핵심 파이프라인을 구축합니다.
+- **핵심 키워드**: Document Loaders, Text Splitters, Embeddings, Vector Stores, InMemoryVectorStore, Retrieval-Augmented Generation, Retriever Chain
+- **주요 실습**:
+    - **가상 사내 규정 문서 기반 RAG 체인 구축**: `RecursiveCharacterTextSplitter`를 통해 가상 규정 텍스트를 청크로 쪼개고, `GoogleGenAIEmbeddings`로 벡터 변환 후 `InMemoryVectorStore`에 적재하여, 검색기와 LLM을 LCEL로 엮은 사내 규정 질의응답 비서 및 할루시네이션 방지 체인 구축
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
@@ -57,6 +63,7 @@ Pydantic을 활용한 구조화된 출력(Structured Output)과 LCEL의 병렬/�
 - [06-09.ipynb](06-09.ipynb): google-genai SDK 활용 실습 노트북
 - [06-10.ipynb](06-10.ipynb): LangChain 기초 개념 학습 및 LCEL 체인 구축 실습 노트북
 - [06-11.ipynb](06-11.ipynb): LangChain 심화 및 응용 실습 노트북
+- [06-12.ipynb](06-12.ipynb): LangChain RAG 시스템 기초 및 구현 실습 노트북
 - **트러블슈팅 리포트**:
     - [troubleshooting/](./troubleshooting/): 10주차 실습 과정에서 발생하는 문제 상황 및 해결 가이드 기록 폴더
 
