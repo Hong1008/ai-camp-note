@@ -30,13 +30,33 @@
 - **주요 실습**:
     - **K개 추천 리스트 평가**: 실제 선호 아이템과 추천된 Top-K 아이템 리스트 간의 Precision@K, Recall@K, NDCG@K 지표를 수학적 수식에 맞추어 직접 Python으로 구현하고 결과 비교
 
+### 🟡 Theme 38: Google GenAI SDK 활용 및 구조화 출력 실습 (2026-06-09)
+Google GenAI SDK의 stateless `models` 및 stateful `chats` 인터페이스의 차이를 이해하고, Pydantic을 활용한 구조화된 출력(Structured Output)과 응답 속도 최적화(스트리밍, 비동기, 캐싱)를 실습합니다.
+- **핵심 키워드**: Google GenAI, client.models, client.chats, Structured Output, Pydantic, Context Caching, Async
+- **주요 실습**:
+    - **Pydantic 구조화 응답 매핑**: LLM의 응답 스키마를 Pydantic 객체로 정의하여 구조화된 JSON 데이터로 안전하게 획득
+
+### 🟡 Theme 39: LangChain 기초 및 LCEL 체인 구축 실습 (2026-06-10)
+특정 LLM 공급자 종속성을 배제하고 일관된 인터페이스를 제공하는 LangChain 프레임워크를 도입하여, ChatPromptTemplate과 StrOutputParser를 파이프라인(`|`)으로 연결한 LCEL 스트리밍 체인을 구축합니다.
+- **핵심 키워드**: LangChain, init_chat_model, ChatPromptTemplate, StrOutputParser, LCEL, Streaming
+- **주요 실습**:
+    - **LCEL 스트리밍 체인**: 템플릿-모델-파서를 LCEL로 구성하여 실시간 토큰 스트리밍 출력을 지원하는 대화형 체인 구현
+
+### 🟢 Theme 40: LangChain 심화 및 실습 (2026-06-11)
+Pydantic을 활용한 구조화된 출력(Structured Output)과 LCEL의 병렬/커스텀 함수 결합을 설계하고 실무 아키텍처(싱글톤/모듈화)를 다룹니다.
+- **핵심 키워드**: Structured Output, with_structured_output, RunnableParallel, RunnableLambda, Singleton
+- **주요 실습**:
+    - **LangChain 심화 실습**: 06-11 노트북을 활용하여 게임 캐릭터 카드 구조화 생성 및 병렬 처리 체인 구축 완수
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
 
 ### 📓 실습 노트북 및 리포트
-- [06-08.ipynb](06-08.ipynb): 10주차 추천시스템 핵심 알고리즘 및 평가 지표 실습 통합 노트북 (진행 중)
+- [06-08.ipynb](06-08.ipynb): 10주차 추천시스템 핵심 알고리즘 및 평가 지표 실습 통합 노트북
 - [06-09.ipynb](06-09.ipynb): google-genai SDK 활용 실습 노트북
+- [06-10.ipynb](06-10.ipynb): LangChain 기초 개념 학습 및 LCEL 체인 구축 실습 노트북
+- [06-11.ipynb](06-11.ipynb): LangChain 심화 및 응용 실습 노트북
 - **트러블슈팅 리포트**:
     - [troubleshooting/](./troubleshooting/): 10주차 실습 과정에서 발생하는 문제 상황 및 해결 가이드 기록 폴더
 
@@ -110,3 +130,25 @@
 * **StrOutputParser**: LLM 반환 복잡한 `AIMessage` 객체로부터 순수 텍스트 내용만 추출.
 * **LCEL**: 프롬프트, 모델, 파서를 파이프(`|`) 연산자로 선언적으로 엮는 기법.
 * **실습**: `chat_prompt | model | StrOutputParser()` 형태의 체인을 설계하여 스트리밍(`stream()`) 방식으로 텍스트를 실시간 터미널에 흘려보내는(flush) 로직을 완수함.
+
+---
+
+## 📝 2026-06-11 실습 및 피드백 정리 (LangChain 심화 및 실무 아키텍처 실습)
+
+### 1. `with_structured_output`을 이용한 구조화된 출력
+* **원리**: Pydantic `BaseModel`로 출력 데이터 스키마를 정의하고, `model.with_structured_output`에 전달하면 LLM 응답을 파라미터가 검증된 파이썬 객체로 즉시 획득할 수 있습니다. 
+* **효과**: 개발 시 별도의 파싱 로직(`json.loads` 등) 없이 안정적으로 키값과 타입이 보장된 데이터를 다룰 수 있어 타입 안정성이 크게 상승합니다.
+
+### 2. LCEL의 파이프라인 연산자(`|`)의 작동 원리
+* **이유**: LangChain 구성 요소가 상속받는 `Runnable` 추상 클래스가 파이썬 매직 메서드인 `__or__`와 `__ror__`를 오버로딩하여 구현했기 때문입니다.
+* **결과**: `concept_prompt | model | parser`를 실행하면 각 단계의 출력이 다음 단계의 입력으로 순차 전송되는 `RunnableSequence` 객체를 형성하게 됩니다.
+
+### 3. 일반 함수의 체인 결합 (`RunnableLambda`)
+* **원리**: `Runnable` 인터페이스를 상속하지 않는 일반 파이썬 함수도 `RunnableLambda(func)`로 래핑하거나 파이프 기호 우측에 직접 연결(Type Coercion)하여 체인 내에서 입출력을 가공할 수 있습니다.
+
+### 4. `RunnableParallel`을 활용한 동시성 제어
+* **효과**: 하나의 입력값을 받아 여러 체인을 병렬로 동시 수행하고, 결과들을 하나의 딕셔너리로 결합해 줍니다. 병렬 API 호출을 통해 실행 시간을 획기적으로 낮출 수 있습니다.
+
+### 5. 실무용 싱글톤(Singleton) 아키텍처 설계
+* **모듈 기반 싱글톤**: 파이썬은 임포트된 모듈이 최초 한 번만 메모리에 올라가는 특성을 이용하여 `chains.py`에 체인을 미리 빌드해 두고 필요한 모듈에서 호출하는 방식을 권장합니다.
+* **클래스 기반 싱글톤**: 웹 API 서버(FastAPI 등)에서는 LLMChainManager와 같은 인스턴스 싱글톤을 구축하거나 DI 컨테이너를 활용하여 자원을 중앙 집약적으로 통제합니다.
