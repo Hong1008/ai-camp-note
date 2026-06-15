@@ -86,6 +86,11 @@ dependencies = [
     "langchain-ollama>=1.1.0",
     "langchain-google-vertexai>=3.2.4",
     "langchain-text-splitters>=1.1.2",
+    "langchain-community>=0.4.2",
+    "pypdf>=6.13.2",
+    "rapidocr>=3.8.3",
+    "onnxruntime>=1.26.0",
+    "pypdfium2>=5.9.0",
 ]
 
 [tool.setuptools]
