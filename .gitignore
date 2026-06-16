@@ -25,3 +25,8 @@ week7/cifar-10-batches-py/
 
 # Video files
 *.mp4
+
+# Vector database local stores
+**/.chroma_*/
+**/.chroma_company_policy/
+
