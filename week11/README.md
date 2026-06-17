@@ -20,6 +20,13 @@
     - **Vector Store (Chroma) 연동 및 metadata filter 실습**: 문서와 메타데이터를 저장 및 인덱싱하고, 복수의 조건을 통한 하이브리드 필터링 쿼리 적용
     - **중복 ID 적재 정책 검증**: 동일한 `ids`를 갖는 문서를 다시 `add_documents` 할 시, 에러가 아닌 기존 데이터를 덮어쓰는 `Upsert` 동작 메커니즘 실증
 
+### 🟡 Theme 44: Ensemble Retriever 및 하이브리드 검색(Hybrid Search) 실습 (2026-06-17)
+- **핵심 키워드**: Hybrid Search, EnsembleRetriever, BM25Retriever, Reciprocal Rank Fusion(RRF), Keyword Matching, Semantic Search
+- **주요 실습**:
+    - **이종 Retriever 구축 및 결합**: 키워드 매칭(BM25)과 밀집 벡터 검색(Chroma)의 상반된 장단점을 분석하고 두 시스템을 결합
+    - **RRF 알고리즘 기반 순위 융합**: 가중치를 적용한 EnsembleRetriever의 동작을 파악하고 최적의 가중치 Trade-off 탐색
+    - **하이브리드 RAG 파이프라인 검증**: 고유명사 품번 매칭과 문맥 이해를 모두 만족시키는 복합 질의를 통한 RAG 품질 실증
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
@@ -28,8 +35,11 @@
 - **학습 콘텐츠**:
     - [content/](content/): 일자별 실습 코드 및 분석 자료 저장 폴더
     - [06-15.ipynb](06-15.ipynb): 가변 차원 임베딩 성능 비교 및 문서 로딩/청킹 실습 노트북
+    - [06-16.ipynb](06-16.ipynb): Vector Store 구축 및 유사도 검색 실습 노트북
+    - [06-17.ipynb](06-17.ipynb): Ensemble Retriever 및 하이브리드 검색 실습 노트북
 - **트러블슈팅 리포트**:
     - [troubleshooting/](troubleshooting/): 실습 과정에서 발생하는 문제 상황 및 해결 가이드 기록 폴더
+    - [2026-06-17.md](troubleshooting/2026-06-17.md): Chroma 중복 적재 및 ParentDocumentRetriever 타입 검증 에러 해결 리포트
 
 ---
 
@@ -88,3 +98,24 @@
 
 ### 4. 전통 NLP와 LLM/RAG의 실무적 융합 및 시너지
 * **배움**: LLM 임베딩의 의미론적(Semantic) 검색의 한계를 극복하기 위해, 전통적인 형태소 분석(문장 분리)을 통한 청크 전처리, 고유명사 매칭을 위한 BM25와의 하이브리드 검색, NER(개체명 인식)을 통한 메타데이터 필터 조건 자동 추출 등을 융합해야 비로소 프로덕션 수준의 RAG가 완성됨을 배웠습니다.
+
+---
+
+## 📝 2026-06-17 실습 및 피드백 정리
+
+### 1. 하이브리드 RAG 및 중복 적재 방지 설계
+* **현상**: Chroma DB에 동일한 데이터가 반복 적재(Append)되어 상위 유사도 결과가 중복 문서로 가득 차 정작 R&D 센터 보안 지침과 같은 다른 핵심 유관 문서가 밀려나는 오동작을 겪었습니다.
+* **배움**:
+  * RAG의 최종 성능은 Retriever가 LLM에 집어넣는 Context의 유일성과 정보 밀도에 좌우되므로, 적재 단계에서의 중복 데이터 제거(Deduplication)와 `delete_collection()` 등을 활용한 데이터 무결성 초기화 파이프라인 구축이 필수적임을 실증했습니다.
+  * 키워드 기반 BM25(희소 벡터)와 Chroma(밀집 벡터)의 유사도 점수 스케일 격차를 해결하기 위해 순위 기반 융합 공식인 RRF(Reciprocal Rank Fusion)를 사용하여 하이브리드 검색을 오케스트레이션했습니다.
+
+### 2. Parent-Document Retriever의 상속 오류 해결 및 계층화 검색
+* **현상**: `ParentDocumentRetriever`에 `SemanticChunker`를 주입하자 Pydantic 타입 불일치 에러(`ValidationError`)를 겪었습니다.
+* **배움**:
+  * `SemanticChunker`가 `TextSplitter`가 아닌 `BaseDocumentTransformer`를 상속하기 때문임을 파악하고, `parent_splitter=None`으로 우회 선언한 뒤 직접 의미론적으로 자른 부모 청크 목록을 `add_documents()`에 주입하여 수동 매핑(Direct Mapping) 방식으로 문제를 정교하게 해결했습니다.
+  * 이 과정을 통해 검색 정밀도를 위한 작은 자식 청크(150자)와 풍부한 답변 품질을 위한 큰 부모 청크(300~700자)의 계층적 맵 구조가 어떻게 작동하는지 원리를 이해했습니다.
+
+### 3. 출처(Source) 보존형 LCEL 및 LLM-as-a-Judge 평가기 구축
+* **배움**:
+  * RAG 답변 도출 시 원본 문서의 소실을 막기 위해 `RunnableParallel`과 `.assign()` 문법을 활용하여 `{"answer": ..., "documents": [...]}` 형태로 출처를 동시 리턴하는 표준 LCEL 체인을 완성했습니다.
+  * Ragas 프레임워크의 RAG 삼각측량 검증 원리(Faithfulness, Answer Relevance, Context Precision)를 분석했으며, 나아가 Pydantic `with_structured_output` API를 활용하여 사내 비즈니스 감사 규정에 맞춤 대응할 수 있는 순수 LLM 기반의 가드레일 평가기를 직접 제작하고 연동에 성공했습니다.
