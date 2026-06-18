@@ -27,6 +27,13 @@
     - **RRF 알고리즘 기반 순위 융합**: 가중치를 적용한 EnsembleRetriever의 동작을 파악하고 최적의 가중치 Trade-off 탐색
     - **하이브리드 RAG 파이프라인 검증**: 고유명사 품번 매칭과 문맥 이해를 모두 만족시키는 복합 질의를 통한 RAG 품질 실증
 
+### 🟡 Theme 45: Tool Calling 기반 ReAct 에이전트 및 STT 연동 실습 (2026-06-18)
+- **핵심 키워드**: Tool Calling, @tool, bind_tools, ReAct Agent, AgentExecutor, SpeechRecognition, PyDub, Voice Agent
+- **주요 실습**:
+    - **LangChain Tool 정의 및 모델 바인딩**: `@tool` 데코레이터를 이용한 커스텀 도구 정의 및 `bind_tools()`를 통한 모델 연동
+    - **ReAct 에이전트 흐름 구축**: `create_react_agent`와 `AgentExecutor`를 활용하여 사내 규정 RAG 및 계산기 도구를 유기적으로 선택하고 실행하는 ReAct 아키텍처 설계
+    - **STT 음성 비서 프로토타입 구현**: 음성 파일(`stt_test.wav`)을 로드하여 텍스트로 변환(STT)하고, 이를 에이전트의 입력값으로 전달하여 도구를 활용해 응답을 도출하는 전체 파이프라인 실증
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
@@ -37,14 +44,16 @@
     - [06-15.ipynb](06-15.ipynb): 가변 차원 임베딩 성능 비교 및 문서 로딩/청킹 실습 노트북
     - [06-16.ipynb](06-16.ipynb): Vector Store 구축 및 유사도 검색 실습 노트북
     - [06-17.ipynb](06-17.ipynb): Ensemble Retriever 및 하이브리드 검색 실습 노트북
+    - [06-18.ipynb](06-18.ipynb): Tool Calling 기반 ReAct 에이전트 및 STT 연동 실습 노트북
 - **트러블슈팅 리포트**:
     - [troubleshooting/](troubleshooting/): 실습 과정에서 발생하는 문제 상황 및 해결 가이드 기록 폴더
     - [2026-06-17.md](troubleshooting/2026-06-17.md): Chroma 중복 적재 및 ParentDocumentRetriever 타입 검증 에러 해결 리포트
+    - [2026-06-18.md](troubleshooting/2026-06-18.md): Tool Calling 에이전트 에러 핸들링 및 STT 연동 트러블슈팅 리포트
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Libraries**: `langchain`, `langchain-google-genai`, `scikit-learn`, `numpy`, `rapidocr`, `onnxruntime`
+- **Libraries**: `langchain`, `langchain-google-genai`, `scikit-learn`, `numpy`, `rapidocr`, `onnxruntime`, `speechrecognition`, `pydub`
 
 ---
 
@@ -119,3 +128,28 @@
 * **배움**:
   * RAG 답변 도출 시 원본 문서의 소실을 막기 위해 `RunnableParallel`과 `.assign()` 문법을 활용하여 `{"answer": ..., "documents": [...]}` 형태로 출처를 동시 리턴하는 표준 LCEL 체인을 완성했습니다.
   * Ragas 프레임워크의 RAG 삼각측량 검증 원리(Faithfulness, Answer Relevance, Context Precision)를 분석했으며, 나아가 Pydantic `with_structured_output` API를 활용하여 사내 비즈니스 감사 규정에 맞춤 대응할 수 있는 순수 LLM 기반의 가드레일 평가기를 직접 제작하고 연동에 성공했습니다.
+
+---
+
+## 📝 2026-06-18 실습 및 피드백 정리
+
+### 1. LangChain Hub 보안 패치에 따른 ValueError 대응
+* **현상**: `hub.pull("hwchase17/react")` 호출 시 외부 원격 리포지토리로부터 검증되지 않은 객체가 직렬화되어 풀링되는 것을 차단하는 Pydantic 보안 규정으로 인해 `ValueError`가 발생했습니다.
+* **배움**:
+  * 이를 해결하기 위해 `dangerously_pull_public_prompt=True` 인수를 활용할 수 있지만, 현업 배포 관점에서는 네트워크 지연 및 외부 API 가용성 이슈를 해소하기 위해 ReAct용 프롬프트를 로컬 `PromptTemplate`으로 정의하여 외부 의존성을 제거하는 것이 훨씬 견고한 설계임을 이해했습니다.
+
+### 2. ReAct 에이전트의 단일 텍스트 입력 한계 및 Pydantic ValidationError
+* **현상**: 도구 함수 정의 시 복수의 float 인자(`a: float, b: float`)를 명시했을 때, ReAct 에이전트의 문자열 입력 포맷(`Action Input: 354.2, 12.8`)을 Pydantic이 적절히 캐스팅하지 못하고 유효성 에러를 일으켰습니다.
+* **배움**:
+  * ReAct 아키텍처는 에이전트 루프 상에서 단일 텍스트 인자를 전달하는 데 특화되어 있으므로, 복수 파라미터가 필요한 도구는 **단일 문자열 입력(Single-string Input)**을 받게 한 후 내부 파싱(split)을 수행하는 것이 시스템적 충돌을 예방하는 정석적인 우회책임을 배웠습니다.
+
+### 3. Streamlit 상태 관리(Session State) 및 RAG 예외 방어선 구축
+* **현상**: 질문을 입력할 때마다 Streamlit 전체 스크립트가 재실행되며 로컬 변수 `vectorstore`가 메모리에서 휘발하는 버그와, 스캔본 PDF 업로드 시 텍스트 파싱 실패로 빈 리스트가 Chroma에 주입되어 `ValueError`가 발생하는 문제를 확인했습니다.
+* **배움**:
+  * 리로딩 시 상태 지속성을 확보하기 위해 `st.session_state`를 도입하여 해결했으며, 빈 텍스트 유입을 사전에 차단하기 위한 **Guard Clause(예외 방어선)**를 구현하여 프로덕션 수준의 예외 처리를 체감했습니다.
+
+### 4. 대규모 RAG 아키텍처 이원화 및 벡터 DB 설계 원칙
+* **배움**:
+  * 부하 격리(Fault Isolation)를 위해 무거운 배치 처리인 **데이터 적재(Ingestion) 파이프라인**과 실시간 서빙용 **검색/추론(Serving) API**를 물리적/논리적으로 완전히 이원화하는 설계 원칙을 학습했습니다.
+  * 또한, HNSW 인덱스가 차지하는 극심한 RAM 비용 오버헤드를 고려할 때 무분별한 다중 컬렉션 분해보다는 **단일 컬렉션 적재 후 메타데이터 사전 필터링(Pre-filtering)**을 걸어주는 것이 실무적으로 가장 가성비 높고 정확한 설계 기법임을 파악했습니다.
+
