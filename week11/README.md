@@ -34,6 +34,13 @@
     - **ReAct 에이전트 흐름 구축**: `create_react_agent`와 `AgentExecutor`를 활용하여 사내 규정 RAG 및 계산기 도구를 유기적으로 선택하고 실행하는 ReAct 아키텍처 설계
     - **STT 음성 비서 프로토타입 구현**: 음성 파일(`stt_test.wav`)을 로드하여 텍스트로 변환(STT)하고, 이를 에이전트의 입력값으로 전달하여 도구를 활용해 응답을 도출하는 전체 파이프라인 실증
 
+### 🟢 Theme 46: LangGraph 기반 StateGraph 에이전트 설계 및 제어 실습 (2026-06-19)
+- **핵심 키워드**: LangGraph, StateGraph, TypedDict State, Nodes & Edges, Conditional Edge, Router, Recursion Limit
+- **주요 실습**:
+    - **기본 StateGraph 흐름 구축**: 전역 상태(SimpleState)를 정의하고 각 노드와 엣지를 등록하여 비순환 에이전트 그래프 작동 원리 실증
+    - **Conditional Edge 기반 스마트 라우팅**: LLM 구조화 출력을 사용하여 DB 검색 필요성을 판단하고 조건부 엣지를 통해 검색/답변 노드로 동적 분기하는 에이전트 아키텍처 설계
+    - **Recursion Limit을 통한 폭주 방어**: 에이전트의 무한 루프 상황을 시뮬레이션하고 `recursion_limit` 설정을 통해 가드가 정상 작동함을 입증
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
@@ -45,15 +52,17 @@
     - [06-16.ipynb](06-16.ipynb): Vector Store 구축 및 유사도 검색 실습 노트북
     - [06-17.ipynb](06-17.ipynb): Ensemble Retriever 및 하이브리드 검색 실습 노트북
     - [06-18.ipynb](06-18.ipynb): Tool Calling 기반 ReAct 에이전트 및 STT 연동 실습 노트북
+    - [06-19.ipynb](06-19.ipynb): LangGraph 기반 StateGraph 에이전트 설계 및 제어 실습 노트북
 - **트러블슈팅 리포트**:
     - [troubleshooting/](troubleshooting/): 실습 과정에서 발생하는 문제 상황 및 해결 가이드 기록 폴더
     - [2026-06-17.md](troubleshooting/2026-06-17.md): Chroma 중복 적재 및 ParentDocumentRetriever 타입 검증 에러 해결 리포트
     - [2026-06-18.md](troubleshooting/2026-06-18.md): Tool Calling 에이전트 에러 핸들링 및 STT 연동 트러블슈팅 리포트
+    - [2026-06-19.md](troubleshooting/2026-06-19.md): LangGraph 상태 불일치, Reducer 충돌 및 Recursion Limit 초과 해결 리포트
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Libraries**: `langchain`, `langchain-google-genai`, `scikit-learn`, `numpy`, `rapidocr`, `onnxruntime`, `speechrecognition`, `pydub`
+- **Libraries**: `langchain`, `langchain-google-genai`, `langgraph`, `scikit-learn`, `numpy`, `rapidocr`, `onnxruntime`, `speechrecognition`, `pydub`
 
 ---
 
@@ -152,4 +161,24 @@
 * **배움**:
   * 부하 격리(Fault Isolation)를 위해 무거운 배치 처리인 **데이터 적재(Ingestion) 파이프라인**과 실시간 서빙용 **검색/추론(Serving) API**를 물리적/논리적으로 완전히 이원화하는 설계 원칙을 학습했습니다.
   * 또한, HNSW 인덱스가 차지하는 극심한 RAM 비용 오버헤드를 고려할 때 무분별한 다중 컬렉션 분해보다는 **단일 컬렉션 적재 후 메타데이터 사전 필터링(Pre-filtering)**을 걸어주는 것이 실무적으로 가장 가성비 높고 정확한 설계 기법임을 파악했습니다.
+
+---
+
+## 📝 2026-06-19 실습 및 피드백 정리
+
+### 1. LangGraph 기반 StateGraph 흐름 제어 및 안정성 방어선 설계
+* **배움**:
+  * 단순 선형 구조(LCEL 체인)를 넘어서는 순환성 루프 및 분기형 에이전트 구현을 위해, 전역 상태(State) 데이터를 노드 간에 전달하고 업데이트하는 LangGraph 프레임워크의 구조를 실증했습니다.
+  * 루프 탐색 시 발생할 수 있는 무한 폭주 위험을 차단하고 런타임을 보호하기 위한 **`recursion_limit`** 기반 예외 차단 가드레일을 구축하여 프로덕션 수준의 시스템 안정성 장치를 학습했습니다.
+
+### 2. 하이브리드 Reranker 결합을 통한 고정밀 Retrieval 설계
+* **배움**:
+  * 고유명사 키워드에 뛰어난 **BM25**와 자연어 문맥적 의미에 강한 **Chroma Vector Store**의 결과를 **Ensemble(RRF 융합)**하고, 이를 2차적으로 **Cross-Encoder Reranker(bge-reranker-base)**에 투입하는 고정밀 RAG 구조를 완성했습니다.
+  * 이 하이브리드 조합이 Ragas 평가 결과 상에서 `Context Precision = 1.0`, `Context Recall = 1.0`이라는 완벽한 지표 성능을 도출해 내는 것을 실증함으로써, 정보 유실 방지와 핵심 정보 정렬이라는 두 마리 토끼를 모두 잡는 RAG의 설계 원칙을 정립했습니다.
+
+### 3. Ragas RAG 정량 평가 프레임워크의 연동 및 트러블슈팅
+* **배움**:
+  * Ragas v0.2.x 이상에서 과도기적 컴포넌트 아키텍처 전환으로 인해 발생하는 `evaluate` 러너와 신규 `SimpleBaseMetric` 간의 타입 불일치 오류를 추적하여, 경고 제어 및 소문자 인스턴스 맵핑을 활용한 실무형 우회법으로 해결했습니다.
+  * 답변 팩트가 일치함에도 마크다운 격자 기호(`|`) 형식의 테이블 구조를 NLI 추론기가 판별하지 못해 `Faithfulness` 점수가 낮게 잡히는 가짜 실패(False Negative) 현상을 관찰하고, 이를 극복하기 위해 **표의 자연어 서술화(Textualization)** 등 표 전처리 전략의 필수성을 이해했습니다.
+
 
