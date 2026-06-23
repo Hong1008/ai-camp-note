@@ -31,8 +31,8 @@
 사용자의 발화 맥락에서 **수업 시작(Daily Start)** 또는 **새 주차 시작(New Week Start)**의 의도가 파악될 경우, 다음 규칙을 유연하게 적용한다.
 
 ### 4.1. 공통 필수 작업 (매 수업 시작 시)
-- **브랜치 생성**: [Git 워크플로우](./skills/git_workflow.md) 규칙에 따라 당일 브랜치(`daily/yyyy-mm-dd`)를 생성하고 체크아웃한다.
-- **지침 로드**: [Agents.md](./agents.md)의 Senior Mentor 정체성과 [Skills.md](./skills.md)에 정의된 모든 실습 기술을 즉시 적용할 상태로 전환한다.
+- **브랜치 생성**: [Git 워크플로우](./.agents/skills/git_workflow/SKILL.md) 규칙에 따라 당일 브랜치(`daily/yyyy-mm-dd`)를 생성하고 체크아웃한다.
+- **지침 로드**: [Agents.md](./AGENTS.md)의 Senior Mentor 정체성과 [Skills.md](./.agents/skills/SKILLS.md)에 정의된 모든 실습 기술을 즉시 적용할 상태로 전환한다.
 
 ### 4.2. 주차 관리 규칙
 - **기존 주차 진행**: 단순 수업 시작 요청 시, 현재 진행 중인 주차 폴더 내에서 작업을 준비한다.
