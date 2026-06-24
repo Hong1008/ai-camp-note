@@ -1,7 +1,6 @@
-# Skill: 트러블슈팅 로그 관리 (Troubleshooting)
-
-기술적 이슈와 해결 과정을 체계적으로 기록하여 지식의 자산화를 돕는 기술입니다.
-
+---
+name: Skill: 트러블슈팅 로그 관리 (Troubleshooting)
+description: 기술적 이슈와 해결 과정을 체계적으로 기록하여 지식의 자산화를 돕는 기술입니다.
 ---
 
 ## 1. 기록 원칙 (Principles)
