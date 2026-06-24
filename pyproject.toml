@@ -19,7 +19,7 @@ dependencies = [
     "seaborn>=0.13.2",
     "streamlit>=1.56.0",
     # week3
-    "beautifulsoup4>=4.14.3",
+    "beautifulsoup4>=4.13.5",
     "folium>=0.20.0",
     "lyricsgenius>=3.11.0",
     "playwright>=1.58.0",
@@ -74,7 +74,7 @@ dependencies = [
     "rouge-score>=0.1.2",
     "sentencepiece>=0.2.1",
     "pandas>=3.0.3",
-    "tiktoken>=0.13.0",
+    "tiktoken>=0.12.0",
     "google-genai>=2.8.0",
     "langchain-huggingface>=1.2.2",
     "langchain-core>=1.4.1",
@@ -101,10 +101,16 @@ dependencies = [
     "langgraph>=1.2.4",
     "ragas>=0.4.3",
     "sentence-transformers>=5.6.0",
-    "crewai>=0.118.0",
-    "crewai-tools>=0.76.0",
+    "crewai>=1.14.7",
+    "crewai-tools>=1.14.7",
 ]
 
 [tool.setuptools]
-packages = ["week1", "week2", "week3", "week4", "week5", "week6", "week7","week8", "week9", "week10", "week10.mini_project"]
+packages = ["week1", "week2", "week3", "week4", "week5", "week6", "week7","week8", "week9", "week10", "week10.mini_project", "week11"]
 py-modules = ["config"]
+
+[tool.uv]
+override-dependencies = [
+    "chromadb>=1.5.9",
+]
+

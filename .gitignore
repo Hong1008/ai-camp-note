@@ -30,3 +30,8 @@ week7/cifar-10-batches-py/
 **/.chroma_*/
 **/.chroma_company_policy/
 
+# Toss token cache
+.toss_token.json
+week12/mini-project/.toss_token.json
+
+

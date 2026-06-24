@@ -33,4 +33,10 @@ NAVER_API_BASE_URL = os.getenv('NAVER_API_URL', 'https://openapi.naver.com/v1')
 NAVER_SEARCH_TREND_URL = f"{NAVER_API_BASE_URL}/datalab/search"
 
 GOOGLE_AI_API_KEY = os.getenv('GOOGLE_AI_API_KEY')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+SERPER_API_KEY = os.getenv('SERPER_API_KEY')
 HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')
+
+# 토스증권 API 설정
+TOSS_API_KEY = os.getenv('TOSS_API_KEY')
+TOSS_SECRET_KEY = os.getenv('TOSS_SECRET_KEY')
