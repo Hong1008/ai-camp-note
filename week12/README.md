@@ -21,12 +21,19 @@
     - **Pydantic 구조화 출력 바인딩**: `StrategyReport` 모델 기반으로 CrewAI 출력을 JSON 규격화하여 UI 렌더링 시 HTML 및 CSS 컴포넌트 조합으로 시각화 구현
     - **예외 전파 설계**: list 파싱 에러 및 JSONDecodeError를 감지하여 조용히 묻히지 않도록 Streamlit 상위 수준에서 명시적 예외를 전파(raise)해 디버깅 생산성 증대
 
+### 🟡 Theme 49: LangGraph 기반 Stateful LLM 워크플로우 설계 (2026-06-25)
+- **핵심 키워드**: LangGraph, StateGraph, Node, Edge, Reducer (add_messages), Stateful Agent
+- **주요 실습**:
+    - **StateGraph 아키텍처 구현**: State(TypedDict), Node(Python function), Edge(라우팅 제어)를 조합한 상태 기계 그래프 구현
+    - **메시지 리듀서(add_messages) 실습**: `Annotated`와 `add_messages`를 활용한 상태 자동 병합 및 메시지 히스토리 관리 메커니즘 검증
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
 
 ### 📓 실습 노트북 및 리포트
 - **학습 콘텐츠**:
+    - [06-25.ipynb](06-25.ipynb): 6월 25일 실습 노트북
     - [06-24.ipynb](06-24.ipynb): 토스증권 API 실습 노트북
     - [mini-project/](mini-project/): 반도체 IT 대표 종목 투자 전략 비교 분석 대시보드 패키지
         - [app.py](mini-project/app.py): 10개 IT 반도체 대표 종목 상호 배타적 선택, 탭 구조 및 Plotly 차트, AI 결과 HTML/CSS 대시보드
@@ -35,13 +42,14 @@
         - [tests/test_toss_client.py](mini-project/tests/test_toss_client.py): requests mocking 단위 테스트 스크립트
     - [troubleshooting/](troubleshooting/): 실습 과정에서 발생하는 문제 상황 및 해결 가이드 기록 폴더
 - **트러블슈팅 리포트**:
+    - [troubleshooting/2026-06-25.md](troubleshooting/2026-06-25.md): 6월 25일 트러블슈팅 리포트
     - [troubleshooting/2026-06-23.md](troubleshooting/2026-06-23.md): Ollama 로컬 연동 및 Rich Logger 트러블슈팅 리포트
     - [troubleshooting/2026-06-24.md](troubleshooting/2026-06-24.md): Streamlit & CrewAI Pydantic 출력 JSON 파싱 예외 처리 트러블슈팅 리포트
 
 ---
 
 ## 🛠️ 사용 기술 및 의존성
-- **Libraries**: `crewai`, `streamlit`, `pandas`, `plotly`, `pydantic`, `requests`, `pytest`
+- **Libraries**: `langgraph`, `crewai`, `streamlit`, `pandas`, `plotly`, `pydantic`, `requests`, `pytest`
 
 ---
 
@@ -71,3 +79,22 @@
   * CrewAI `output_pydantic` 파라미터를 사용하여 에이전트의 정성적 출력 데이터를 Pydantic 규격에 맞추더라도, 모델의 성능 제약이나 컨텍스트 윈도우 한계로 인해 JSON 문자열 대신 리스트(`list`)나 일반 텍스트가 리턴될 가능성이 항상 존재합니다.
   * 기존에는 이런 형식 에러가 발생 시 예외를 무조건 삼키거나 기본 객체를 반환하여 UI에 빈 화면이 렌더링되는 조용한 실패(Silent Failure) 현상이 있었습니다.
   * 파이썬의 `isinstance(data, dict)` 체크를 활용해 잘못된 스키마가 들어올 때 명확하게 상위 스택으로 예외(`TypeError`, `ValueError`)를 던져줌으로써 디버깅 생산성과 전체 시스템의 데이터 신뢰도를 높여야 함을 확인했습니다.
+
+---
+
+## 📝 2026-06-25 실습 및 피드백 정리
+
+### 1. LangGraph StateGraph 아키텍처의 3대 요소 내재화
+* **배움**:
+  * LangGraph는 상태(State), 노드(Node), 엣지(Edge) 구조로 LLM 에이전트의 작동 흐름을 제어합니다.
+  * **상태(State)**는 전체 파이프라인에서 공유되는 전역 변수 역할을 하며, **노드(Node)**는 이를 조작해 상태의 일부를 업데이트하는 파이썬 함수입니다. **엣지(Edge)**는 실행 흐름을 제어하며, 조건부 엣지(Conditional Edge)를 통해 LLM의 결과물에 따라 동적으로 노드 간 분기 처리를 수행할 수 있음을 실습했습니다.
+
+### 2. 리듀서(Reducer)의 상태 병합 및 대화 이력 유지 메커니즘
+* **배움**:
+  * LangGraph는 기본적으로 노드의 반환값을 기존 상태에 덮어쓰기(Overwrite)합니다. 대화형 AI 서비스에서 대화 이력을 유실 없이 누적하기 위해서는 `Annotated[list, add_messages]`와 같은 리듀서 선언이 반드시 필수적임을 확인했습니다.
+  * `add_messages` 리듀서는 단순 추가(Append) 기능 외에도 메시지 `id`가 동일할 경우 기존 메시지를 갱신(Update)하는 정교한 동작을 제공하여 스트리밍이나 대화 수정 시 시각적 일관성을 확보하는 도구임을 배웠습니다.
+
+### 3. ReAct(Reasoning + Acting) 에이전트 루프 설계
+* **배움**:
+  * LLM에 도구를 바인딩(`bind_tools`)하고 조건부 엣지를 사용해 LLM 노드와 Tools 실행 노드를 연결함으로써, 모델이 스스로 필요한 연산을 끝낼 때까지 자율적으로 순환하며 최종 결론을 완성하는 ReAct 에이전트 파이프라인을 구축했습니다.
+  * 이 과정에서 `HumanMessage` 객체의 `content`가 단순 문자열이 아닌 멀티모달용 리스트 구조(`[{'type': 'text', 'text': ...}]`)로 유입될 수 있어, 런타임 가드(Type check)가 필요함을 체득했습니다.
