@@ -27,12 +27,21 @@
     - **StateGraph 아키텍처 구현**: State(TypedDict), Node(Python function), Edge(라우팅 제어)를 조합한 상태 기계 그래프 구현
     - **메시지 리듀서(add_messages) 실습**: `Annotated`와 `add_messages`를 활용한 상태 자동 병합 및 메시지 히스토리 관리 메커니즘 검증
 
+### 🟡 Theme 50: LangGraph 고급 흐름 제어 및 모니터링 설계 (2026-06-26)
+- **핵심 키워드**: Structured Routing, Command, Dynamic Routing, Looping, RunnableConfig, LangSmith
+- **주요 실습**:
+    - **Structured Output 기반 의도 라우팅**: Pydantic `BaseModel`과 `with_structured_output`를 활용하여 의도를 정밀 분류하고 페르소나별 최적의 에이전트 노드로 동적 분기 처리
+    - **Command 객체를 통한 상태 변경 및 라우팅 일원화**: 노드 내에서 `Command` 객체의 `goto`와 `update`를 리턴하여, 선언적 조건부 에지 정의를 없애고 동적으로 흐름을 제어하는 구조 설계
+    - **ReAct 에이전트 멀티 툴 확장 및 병렬 처리**: 조회, 계산, 정책 검색, 템플릿 제안 등 5개 도구를 LLM과 바인딩하여 복합적인 질문에 대응하는 병렬 도구 실행(Parallel Tool Calling) 라이프사이클 구축
+    - **RunnableConfig/LangSmith 모니터링 연동**: `tags`와 `metadata` 설정을 통해 실행 환경, 세션, 시나리오를 지정하여 LangSmith 상에서 정량 지표 추적 및 필터링 인프라 가동
+
 ---
 
 ## 💻 주요 폴더 및 소스 코드 구조
 
 ### 📓 실습 노트북 및 리포트
 - **학습 콘텐츠**:
+    - [06-26.ipynb](06-26.ipynb): 6월 26일 실습 노트북 (LangGraph 고급 라우팅, Command 객체, RunnableConfig 모니터링 실습)
     - [06-25.ipynb](06-25.ipynb): 6월 25일 실습 노트북
     - [06-24.ipynb](06-24.ipynb): 토스증권 API 실습 노트북
     - [mini-project/](mini-project/): 반도체 IT 대표 종목 투자 전략 비교 분석 대시보드 패키지
@@ -98,3 +107,21 @@
 * **배움**:
   * LLM에 도구를 바인딩(`bind_tools`)하고 조건부 엣지를 사용해 LLM 노드와 Tools 실행 노드를 연결함으로써, 모델이 스스로 필요한 연산을 끝낼 때까지 자율적으로 순환하며 최종 결론을 완성하는 ReAct 에이전트 파이프라인을 구축했습니다.
   * 이 과정에서 `HumanMessage` 객체의 `content`가 단순 문자열이 아닌 멀티모달용 리스트 구조(`[{'type': 'text', 'text': ...}]`)로 유입될 수 있어, 런타임 가드(Type check)가 필요함을 체득했습니다.
+
+---
+
+## 📝 2026-06-26 실습 및 피드백 정리
+
+### 1. Command 객체를 활용한 노드 중심의 상태 변경 및 라우팅 기법
+* **배움**:
+  * LangGraph v0.2.x 이후부터는 노드에서 `Command` 객체를 반환하여, 상태 업데이트(`update`)와 다음으로 실행할 노드 지정(`goto`)을 노드 레벨에서 동시에 제어할 수 있습니다.
+  * 기존의 장황한 `add_conditional_edges` 선언을 상당 부분 걷어내고, 타입 힌트(`Command[Literal[...]]`)를 통해 정적 분석기로부터 타입 안정성을 보장받으며 흐름 제어가 가능함을 실무적으로 학습했습니다.
+
+### 2. LLM의 약점 보완을 위한 '수학적 연산'의 도구 위임
+* **배움**:
+  * 환불 금액 계산, 지연율 연산 등 엄격한 비즈니스 로직에 필요한 수학적 연산을 LLM의 추론에만 의존할 경우 환각(Hallucination)이 발생할 가능성이 높습니다.
+  * 이를 파이썬 도구 함수로 위임하여 LLM이 도구 인자로 매개변수만 넘기도록 유도함으로써 데이터의 신뢰도와 예외 처리 성능을 보장하는 구조가 프로덕션 에이전트 설계의 표준임을 배웠습니다.
+
+### 3. RunnableConfig를 활용한 추적성(Traceability) 인프라 구축
+* **배움**:
+  * `tags`와 `metadata` 값을 `RunnableConfig`를 통해 `app.invoke()`에 흘려보냄으로써, 수많은 테스트 런 중 특정 시나리오(`scenario`)나 개발 버전(`version`), 또는 특정 사용자 ID 세션을 필터링하여 LangSmith에서 빠르게 추적하는 기법을 정립했습니다.
