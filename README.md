@@ -21,6 +21,7 @@ SK FAMILY AI 캠프 30 과정에서 진행되는 **실습 소스코드**를 기�
 | **Week 9** | 자연어 처리 (NLP) 및 Deep Learning | [바로가기 ➔](./week9/README.md) |
 | **Week 10** | 추천 시스템 | [바로가기 ➔](./week10/README.md) |
 | **Week 11** | 고급 LLM 응용 및 에이전트 | [바로가기 ➔](./week11/README.md) |
+| **Week 12** | 고급 에이전트 워크플로우 (CrewAI & LangGraph) | [바로가기 ➔](./week12/README.md) |
 
 ---
 
