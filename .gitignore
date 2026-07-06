@@ -15,6 +15,7 @@ practice.ipynb
 
 # IDE
 .vscode/
+.idea/
 
 # Datasets
 **/data/
@@ -34,4 +35,5 @@ week7/cifar-10-batches-py/
 .toss_token.json
 week12/mini-project/.toss_token.json
 
-
+# Vector database and RAG data
+rag_data/
